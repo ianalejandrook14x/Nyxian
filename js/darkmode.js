@@ -1,0 +1,186 @@
+/* Botón de modo oscuro */
+.dark-mode-toggle {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.9);
+  border-radius: 24px;
+  padding: 6px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.3s;
+}
+.dark-mode-toggle:hover {
+  background: #eee;
+}
+.dark-mode .dark-mode-toggle {
+  background: rgba(30,30,30,0.95);
+  color: #fff;
+}
+.toggle-icon {
+  font-size: 1.3em;
+  margin-right: 6px;
+}
+.toggle-text {
+  font-size: 1em;
+  font-weight: 500;
+}
+
+/* FONDOS y TEXTOS GENERALES */
+body.dark-mode,
+.dark-mode .navbar,
+.dark-mode .container,
+.dark-mode .about_container,
+.dark-mode .product_section,
+.dark-mode .why_section,
+.dark-mode .info_section,
+.dark-mode .footer_section
+{
+  background-color: #181a1b !important;
+  color: #e3e6e8 !important;
+}
+
+.dark-mode .custom_heading,
+.dark-mode .detail-box p,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+.dark-mode p,
+.dark-mode label,
+.dark-mode .nav-link,
+.dark-mode .navbar-brand,
+.dark-mode .footer_section p,
+.dark-mode .footer_section a,
+.dark-mode .contact_section h2,
+.dark-mode .contact_section label,
+.dark-mode .contact_section p
+{
+  color: #e3e6e8 !important;
+}
+
+/* ENLACES */
+.dark-mode a, .dark-mode a.nav-link {
+  color: #85aaff !important;
+}
+
+/* FORMULARIOS */
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode .message-box
+{
+  background: #222 !important;
+  color: #eee !important;
+  border-color: #444 !important;
+}
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder {
+  color: #ccc !important;
+}
+
+.dark-mode form button,
+.dark-mode .btn,
+.dark-mode button {
+  background: #333 !important;
+  color: #fff !important;
+  border: none !important;
+}
+.dark-mode form button:hover,
+.dark-mode .btn:hover,
+.dark-mode button:hover {
+  background: #111 !important;
+  color: #fff !important;
+}
+
+/* FOOTER */
+.dark-mode .footer_section {
+  background: #181a1b !important;
+  color: #e3e6e8 !important;
+}
+.dark-mode .footer_section a {
+  color: #85aaff !important;
+}
+
+/* NAVBAR */
+.dark-mode .navbar,
+.dark-mode .custom_nav-container {
+  background-color: #23272b !important;
+}
+.dark-mode .navbar-brand span {
+  color: #e3e6e8 !important;
+}
+
+/* ITEMS Y CAJAS */
+.dark-mode .item,
+.dark-mode .img-box,
+.dark-mode .about_container,
+.dark-mode .why_container
+{
+  background: #222 !important;
+  color: #e3e6e8 !important;
+}
+
+/* Ajustes extra por si acaso */
+.dark-mode .contact_section .custom_heading,
+.dark-mode .contact_section input,
+.dark-mode .contact_section textarea {
+  color: #e3e6e8 !important;
+  background: #242424 !important;
+}
+
+.dark-mode .contact_section input,
+.dark-mode .contact_section textarea {
+  border-color: #333 !important;
+}
+
+/* Para que los iconos no se vean feos */
+.dark-mode img {
+  filter: none !important;
+}
+
+/* Forzar fondo transparente para header y navbar en ambos modos */
+.header_section,
+.header_section .container-fluid,
+.navbar,
+.custom_nav-container,
+.navbar-brand {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Si usas modo oscuro con una clase en el body */
+body.dark-mode .header_section,
+body.dark-mode .header_section .container-fluid,
+body.dark-mode .navbar,
+body.dark-mode .custom_nav-container,
+body.dark-mode .navbar-brand {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Por defecto (modo claro), texto negro en .contact_section */
+.contact_section,
+.contact_section h2,
+.contact_section span,
+.contact_section a,
+.contact_section div {
+  color: #222 !important;
+}
+
+/* En modo oscuro, texto blanco */
+body.dark-mode .contact_section,
+body.dark-mode .contact_section h2,
+body.dark-mode .contact_section span,
+body.dark-mode .contact_section a,
+body.dark-mode .contact_section div {
+  color: #fff !important;
+}
