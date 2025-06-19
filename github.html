@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Nyxian-web</title>
+    <title>Nyxian</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
@@ -48,6 +48,62 @@
         body.dark .toggle-btn {
             background: #222;
             color: #fff;
+        }
+        .menu-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 11;
+            color: inherit;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+        }
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            top: 55px;
+            right: 20px;
+            background: #fff;
+            color: #111;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            min-width: 160px;
+            overflow: hidden;
+            z-index: 12;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            animation: fadeIn 0.2s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .menu-dropdown.show {
+            display: block;
+        }
+        .menu-dropdown a {
+            display: block;
+            padding: 14px 24px;
+            text-decoration: none;
+            color: inherit;
+            font-size: 1rem;
+            transition: background 0.2s;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+        }
+        .menu-dropdown a:hover {
+            background: #f0f0f0;
+        }
+        body.dark .menu-dropdown {
+            background: #222;
+            color: #fff;
+        }
+        body.dark .menu-dropdown a:hover {
+            background: #333;
         }
         .center-title {
             display: flex;
@@ -220,6 +276,12 @@
 </head>
 <body>
     <button class="toggle-btn" id="toggleTheme">Claro 🌞</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Menú">&#8942;</button>
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="index.html">Inicio</a>
+        <a href="github.html" target="_blank">GitHub</a>
+        <a href="contact.html">Contacto</a>
+    </div>
     <div class="center-title">
         <img src="./images/logo.png" alt="Logo">
         <h1>Nyxian.xyz</h1>
@@ -278,6 +340,20 @@
             darkMode = !darkMode;
             localStorage.setItem('darkMode', darkMode);
             applyTheme();
+        });
+
+        // Menú desplegable hamburguesa
+        const menuBtn = document.getElementById('menuBtn');
+        const menuDropdown = document.getElementById('menuDropdown');
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuDropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            menuDropdown.classList.remove('show');
+        });
+        menuDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     </script>
 </body>
