@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Nyxian</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Montserrat y Archivo Black para botones y títulos -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap');
         :root {
@@ -41,7 +42,7 @@
             color: #222;
             cursor: pointer;
             transition: background 0.3s, color 0.3s;
-            z-index: 20;
+            z-index: 10;
             font-family: 'Archivo Black', Arial, sans-serif;
             font-weight: 400;
             letter-spacing: 1px;
@@ -59,71 +60,53 @@
             border: none;
             font-size: 2rem;
             cursor: pointer;
-            z-index: 21;
+            z-index: 11;
             color: inherit;
-            font-family: 'Archivo Black', Arial, sans-serif;
-            font-weight: 400;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
         }
-        /* Nuevo menú para que se vea siempre encima y más grande */
-        .menu-dropdownn {
+        .menu-dropdown {
             display: none;
             position: absolute;
             top: 55px;
             right: 20px;
             background: #fff;
             color: #111;
-            border-radius: 12px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.20);
-            min-width: 185px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            min-width: 160px;
             overflow: hidden;
-            z-index: 99;
-            font-family: 'Archivo Black', Arial, sans-serif;
-            font-weight: 400;
+            z-index: 22;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
             animation: fadeIn 0.2s;
-            opacity: 0;
-            transform: translateY(-12px) scale(0.97);
-            pointer-events: none;
-            transition: opacity 0.20s, transform 0.22s;
-        }
-        .menu-dropdownn.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px);}
             to { opacity: 1; transform: translateY(0);}
         }
-        .menu-dropdownn a {
+        .menu-dropdown.show {
             display: block;
-            padding: 18px 34px 18px 24px;
+        }
+        .menu-dropdown a {
+            display: block;
+            padding: 14px 24px;
             text-decoration: none;
             color: inherit;
-            font-size: 1.07rem;
-            transition: background 0.18s, color 0.13s;
-            font-family: 'Archivo Black', Arial, sans-serif;
-            font-weight: 400;
-            border-bottom: 1px solid #f0f0f0;
+            font-size: 1rem;
+            transition: background 0.2s;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
         }
-        .menu-dropdownn a:last-child {
-            border-bottom: none;
-        }
-        .menu-dropdownn a:hover {
+        .menu-dropdown a:hover {
             background: #f0f0f0;
-            color: #6d5bff;
         }
-        body.dark .menu-dropdownn {
-            background: #232323;
+        body.dark .menu-dropdown {
+            background: #222;
             color: #fff;
-            box-shadow: 0 6px 24px #0009;
         }
-        body.dark .menu-dropdownn a {
-            border-bottom: 1px solid #333;
-        }
-        body.dark .menu-dropdownn a:hover {
+        body.dark .menu-dropdown a:hover {
             background: #333;
-            color: #ad9bff;
         }
         .center-title {
             display: flex;
@@ -175,7 +158,7 @@
         }
         body.dark .template-row {
             background: var(--template-dark-bg);
-            box-shadow: 0 4px 16px #0005;
+            box-shadow: 0 4px 11px #0005;
         }
         .template-icon {
             width: 52px;
@@ -202,7 +185,7 @@
             filter: invert(1);
         }
         .template-title {
-            font-family: 'Archivo Black', Arial, sans-serif;
+            font-family: 'Montserrat', Arial, sans-serif;
             font-size: 1.16rem;
             letter-spacing: 1.3px;
             color: #222;
@@ -223,7 +206,7 @@
             font-size: 1.04rem;
             border: none;
             border-radius: 8px;
-            font-family: 'Archivo Black', Arial, sans-serif;
+            font-family: 'Montserrat', Arial, sans-serif;
             font-weight: 400;
             letter-spacing: 1px;
             transition: background 0.22s, color 0.22s, box-shadow 0.2s;
@@ -233,7 +216,7 @@
             color: #fff;
         }
         .template-btn:hover {
-            box-shadow: 0 5px 22px #6d5bff36;
+            box-shadow: 0 4px 22px #910000;
             background: #232323;
         }
         body.dark .template-btn {
@@ -289,7 +272,7 @@
 <body>
     <button class="toggle-btn" id="toggleTheme">Claro 🌞</button>
     <button class="menu-btn" id="menuBtn" aria-label="Menú">&#8942;</button>
-    <div class="menu-dropdownn" id="menuDropdown">
+    <div class="menu-dropdown" id="menuDropdown">
         <a href="index.html">Inicio</a>
         <a href="github.html">GitHub</a>
         <a href="contact.html">Contacto</a>
