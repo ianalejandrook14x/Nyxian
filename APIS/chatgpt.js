@@ -1,15 +1,22 @@
 import fetch from "node-fetch";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Solo se permite el método POST" });
+  let message, name;
+
+  if (req.method === "GET") {
+    message = req.query.message || "";
+    name = req.query.name || "";
+  } else if (req.method === "POST") {
+    message = req.body?.message || "";
+    name = req.body?.name || "";
+  } else {
+    return res.status(405).json({ error: "Método no permitido" });
   }
 
-  const { message, name } = req.body || {};
   if (!message || !name) {
     return res.status(400).json({
       creator: "Ian",
-      error: "Falta el 'message' o el 'name' en el cuerpo de la petición."
+      error: "Falta el 'message' o el 'name' en la petición."
     });
   }
 
