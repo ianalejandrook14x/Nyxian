@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nyxian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap');
+        :root {
+            --bg-light: #fff;
+            --bg-dark: #111;
+            --text-light: #111;
+            --text-dark: #fff;
+            --divider-light: #e0e0e0;
+            --divider-dark: #444;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg-light);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s, color 0.3s;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+        }
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 18px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: #e0e0e0;
+            color: #222;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+            z-index: 20;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+        }
+        body.dark .toggle-btn {
+            background: #222;
+            color: #fff;
+        }
+        .menu-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 21;
+            color: inherit;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+        }
+        /* Nuevo menú para que se vea siempre encima y más grande */
+        .menu-dropdownn {
+            display: none;
+            position: absolute;
+            top: 55px;
+            right: 20px;
+            background: #fff;
+            color: #111;
+            border-radius: 12px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.20);
+            min-width: 185px;
+            overflow: hidden;
+            z-index: 99;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+            animation: fadeIn 0.2s;
+            opacity: 0;
+            transform: translateY(-12px) scale(0.97);
+            pointer-events: none;
+            transition: opacity 0.20s, transform 0.22s;
+        }
+        .menu-dropdownn.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .menu-dropdownn a {
+            display: block;
+            padding: 18px 34px 18px 24px;
+            text-decoration: none;
+            color: inherit;
+            font-size: 1.07rem;
+            transition: background 0.18s, color 0.13s;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .menu-dropdownn a:last-child {
+            border-bottom: none;
+        }
+        .menu-dropdownn a:hover {
+            background: #f0f0f0;
+            color: #6d5bff;
+        }
+        body.dark .menu-dropdownn {
+            background: #232323;
+            color: #fff;
+            box-shadow: 0 6px 24px #0009;
+        }
+        body.dark .menu-dropdownn a {
+            border-bottom: 1px solid #333;
+        }
+        body.dark .menu-dropdownn a:hover {
+            background: #333;
+            color: #ad9bff;
+        }
+        .center-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 40px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        .center-title img {
+            max-width: 56px;
+            height: auto;
+            margin-bottom: 10px;
+            filter: invert(0);
+            transition: filter 0.3s;
+        }
+        body.dark .center-title img {
+            filter: invert(1);
+        }
+        .center-title h1 {
+            margin: 0;
+            font-size: 2.4rem;
+            text-align: center;
+            letter-spacing: 2px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+        }
+        .template-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 460px;
+            margin: 0 auto 48px auto;
+            width: 97vw;
+            gap: 24px;
+        }
+        .template-row {
+            display: flex;
+            align-items: center;
+            background: var(--template-bg);
+            border-radius: 13px;
+            box-shadow: 0 4px 16px #0001;
+            padding: 14px 22px 14px 16px;
+            width: 100%;
+            min-width: 0;
+            gap: 20px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        body.dark .template-row {
+            background: var(--template-dark-bg);
+            box-shadow: 0 4px 16px #0005;
+        }
+        .template-icon {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            border-radius: 9px;
+            background: #ececec;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        .template-icon img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            filter: invert(0);
+            transition: filter 0.3s;
+        }
+        body.dark .template-icon {
+            background: #232323;
+        }
+        body.dark .template-icon img {
+            filter: invert(1);
+        }
+        .template-title {
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-size: 1.16rem;
+            letter-spacing: 1.3px;
+            color: #222;
+            margin-right: 18px;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        body.dark .template-title {
+            color: #fff;
+        }
+        .template-row .template-title {
+            min-width: 90px;
+            margin-left: 10px;
+        }
+        .template-btn {
+            margin-left: auto;
+            padding: 8px 30px;
+            font-size: 1.04rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: background 0.22s, color 0.22s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px #0002;
+            cursor: pointer;
+            background: #111;
+            color: #fff;
+        }
+        .template-btn:hover {
+            box-shadow: 0 5px 22px #6d5bff36;
+            background: #232323;
+        }
+        body.dark .template-btn {
+            background: #fff;
+            color: #111;
+        }
+        body.dark .template-btn:hover {
+            background: #ececec;
+        }
+        .footer-divider {
+            width: 95vw;
+            max-width: 680px;
+            border: none;
+            height: 3px;
+            background: var(--divider-light);
+            margin: 60px auto 0 auto;
+            border-radius: 3px;
+        }
+        body.dark .footer-divider {
+            background: var(--divider-dark);
+        }
+        .footer-text {
+            text-align: center;
+            font-size: 1rem;
+            color: #888;
+            margin: 18px 0 18px 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        body.dark .footer-text {
+            color: #bbb;
+        }
+        @media (max-width: 600px) {
+            .template-list {
+                max-width: 99vw;
+            }
+            .template-row {
+                padding: 10px 10px 10px 9px;
+                gap: 12px;
+            }
+            .template-title {
+                font-size: 1.01rem;
+                letter-spacing: 0.8px;
+            }
+            .template-btn {
+                padding: 7px 19px;
+                font-size: 0.98rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-btn" id="toggleTheme">Claro 🌞</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Menú">&#8942;</button>
+    <div class="menu-dropdownn" id="menuDropdown">
+        <a href="index.html">Inicio</a>
+        <a href="github.html">GitHub</a>
+        <a href="contact.html">Contacto</a>
+    </div>
+    <div class="center-title">
+        <img id="logoImg" src="./images/logo.png" alt="Logo">
+        <h1>Nyxian.xyz</h1>
+    </div>
+    <div class="template-list">
+        <div class="template-row">
+            <span class="template-icon"><img src="./images/sheet.png" alt="Template 1"></span>
+            <span class="template-title">Template 1</span>
+            <button class="template-btn" onclick="window.location.href='./templates/tem-1.html'">Ver</button>
+        </div>
+        <div class="template-row">
+            <span class="template-icon"><img src="./images/sheet.png" alt="Template 2"></span>
+            <span class="template-title">Template 2</span>
+            <button class="template-btn" onclick="window.location.href='./templates/tem-2.html'">Ver</button>
+        </div>
+        <div class="template-row">
+            <span class="template-icon"><img src="./images/sheet.png" alt="Template 3"></span>
+            <span class="template-title">Template 3</span>
+            <button class="template-btn" onclick="window.location.href='./templates/tem-3.html'">Ver</button>
+        </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-text">
+        All rights reserved for Ianaleajndrook14x 2024
+    </div>
+    <script>
+        // THEME TOGGLE
+        const btn = document.getElementById('toggleTheme');
+        const body = document.body;
+        const logoImg = document.getElementById('logoImg');
+        let darkMode = localStorage.getItem('darkMode') === 'true';
+        function applyTheme() {
+            if (darkMode) {
+                body.classList.add('dark');
+                btn.textContent = 'Oscuro 🌙';
+                if (logoImg) {
+                    logoImg.src = './images/logo.png';
+                    logoImg.style.filter = 'invert(0)';
+                }
+            } else {
+                body.classList.remove('dark');
+                btn.textContent = 'Claro 🌞';
+                if (logoImg) {
+                    logoImg.src = './images/logo.png';
+                    logoImg.style.filter = 'invert(1)';
+                }
+            }
+        }
+        applyTheme();
+        btn.addEventListener('click', () => {
+            darkMode = !darkMode;
+            localStorage.setItem('darkMode', darkMode);
+            applyTheme();
+        });
+
+        // MENÚ HAMBURGUESA
+        const menuBtn = document.getElementById('menuBtn');
+        const menuDropdown = document.getElementById('menuDropdown');
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuDropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            menuDropdown.classList.remove('show');
+        });
+        menuDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
