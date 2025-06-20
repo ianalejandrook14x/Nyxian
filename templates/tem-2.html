@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nyxian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-bg: linear-gradient(120deg, #23253a 0%, #6d5bff 100%);
+            --card-bg: #23253aee;
+            --card-glow: #6d5bff44;
+            --accent: #6d5bff;
+            --accent-light: #ad9bff;
+            --shadow: 0 8px 24px 0 #6d5bff40;
+            --text-main: #fff;
+            --text-secondary: #c3c3c3;
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--main-bg);
+            color: var(--text-main);
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .header {
+            margin-top: 56px;
+            margin-bottom: 32px;
+            text-align: center;
+            position: relative;
+            z-index: 3;
+        }
+        .title {
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-size: 3rem;
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 0 2px 20px #6D5BFF88, 0 1px 2px #000a;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-weight: 700;
+            color: var(--accent-light);
+            font-size: 1.2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        /* Grid de tarjetas */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 36px;
+            width: 95vw;
+            max-width: 1100px;
+            margin-bottom: 56px;
+            z-index: 2;
+            position: relative;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 34px 28px 28px 28px;
+            position: relative;
+            overflow: hidden;
+            min-height: 265px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            animation: fadeInCard 1s cubic-bezier(.19,.9,.23,1.21);
+        }
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(60px) scale(0.94);}
+            to { opacity: 1; transform: translateY(0) scale(1);}
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 80% 0, #ad9bff44 0%, transparent 80%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .card-icon {
+            font-size: 2.3em;
+            margin-bottom: 13px;
+            color: var(--accent);
+            filter: drop-shadow(0 4px 12px #6d5bff33);
+            z-index: 1;
+        }
+        .card-title {
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-size: 1.23rem;
+            color: var(--accent);
+            margin: 0 0 10px 0;
+            letter-spacing: 1px;
+            z-index: 1;
+        }
+        .card-desc {
+            margin: 0 0 12px 0;
+            color: var(--text-secondary);
+            font-size: 1.09rem;
+            line-height: 1.7;
+            font-weight: 700;
+            z-index: 1;
+        }
+        .card-btn {
+            background: linear-gradient(90deg, #6d5bff 0%, #ad9bff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 11px;
+            padding: 10px 26px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-size: 1.05rem;
+            margin-top: 10px;
+            margin-bottom: 2px;
+            letter-spacing: 1.2px;
+            box-shadow: 0 4px 18px 0 #6d5bff29;
+            cursor: pointer;
+            font-weight: 400;
+            transition: transform 0.13s, box-shadow 0.18s, background 0.2s;
+            z-index: 1;
+        }
+        .card-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            background: linear-gradient(90deg, #ad9bff 0%, #6d5bff 100%);
+            box-shadow: 0 8px 24px 0 #6d5bff66;
+        }
+        /* Efecto partículas */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            opacity: 0.13;
+            animation: floatParticle 17s linear infinite;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(0) scale(1);}
+            80% { opacity: 0.19;}
+            100% { transform: translateY(-92vh) scale(1.13); opacity: 0;}
+        }
+        /* Glow superior */
+        .bg-glow {
+            position: fixed;
+            top: -120px;
+            left: 50%;
+            width: 720px;
+            height: 350px;
+            background: radial-gradient(circle, #ad9bff55 0%, #6d5bff11 80%);
+            filter: blur(50px);
+            opacity: 0.81;
+            pointer-events: none;
+            z-index: 0;
+            transform: translateX(-50%);
+            animation: pulseGlow 8s infinite alternate cubic-bezier(.65,.01,.32,1);
+        }
+        @keyframes pulseGlow {
+            0% { opacity: 0.65; }
+            100% { opacity: 0.92; }
+        }
+        /* Footer */
+        .nyxian-footer {
+            width: 100vw;
+            text-align: center;
+            color: #c3c3c3;
+            font-size: 1rem;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+            margin-top: 16px;
+            z-index: 3;
+            position: relative;
+        }
+        /* Responsive */
+        @media (max-width: 700px) {
+            .card-grid {
+                gap: 18px;
+            }
+            .title {
+                font-size: 2.2rem;
+            }
+        }
+        @media (max-width: 500px) {
+            .header {
+                margin-top: 32px;
+                margin-bottom: 16px;
+            }
+            .title {
+                font-size: 1.33rem;
+            }
+            .card {
+                padding: 22px 9px 18px 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="header">
+        <div class="title">Nyxian</div>
+        <div class="subtitle">Templates</div>
+    </div>
+    <div class="card-grid">
+        <div class="card" style="animation-delay:0.05s">
+            <div class="card-icon">🌟</div>
+            <div class="card-title">Inspiración</div>
+            <div class="card-desc">
+                Descubre ideas que impulsan la creatividad y motivan a seguir creciendo día a día.
+            </div>
+            <button class="card-btn" onclick="alert('¡Sigue brillando!')">Ver más</button>
+        </div>
+        <div class="card" style="animation-delay:0.18s">
+            <div class="card-icon">💻</div>
+            <div class="card-title">Tecnología</div>
+            <div class="card-desc">
+                Explora recursos, ideas y novedades del mundo digital.
+            </div>
+            <button class="card-btn" onclick="window.open('https://github.com/ianalejandrook14x','_blank')">GitHub</button>
+        </div>
+        <div class="card" style="animation-delay:0.32s">
+            <div class="card-icon">🎨</div>
+            <div class="card-title">Diseño</div>
+            <div class="card-desc">
+                Aprende sobre tendencias, color y cómo destacar con tu imagen.
+            </div>
+            <button class="card-btn" onclick="alert('Próximamente - Nyxian')">Explorar</button>
+        </div>
+        <div class="card" style="animation-delay:0.44s">
+            <div class="card-icon">🍃</div>
+            <div class="card-title">Proyectos</div>
+            <div class="card-desc">
+                Descubre o comparte proyectos realizados por la comunidad para crecer juntos.
+            </div>
+            <button class="card-btn" onclick="window.open('https://chat.whatsapp.com/DB8uNKNjsoRK4MvlrJDmZg','_blank')">Comunidad</button>
+        </div>
+    </div>
+    <div class="nyxian-footer">
+        © 2025 Nyxian. Todos los derechos reservados. Creado por ianalejandrook14x
+    </div>
+    <script>
+        function randomParticle() {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 34 + 14;
+            p.style.width = p.style.height = size + 'px';
+            p.style.left = Math.random() * 99 + 'vw';
+            p.style.bottom = '-50px';
+            p.style.background = `radial-gradient(circle, #fff 0%, #6d5bff 80%, #181A20 100%)`;
+            p.style.opacity = Math.random() * 0.21 + 0.14;
+            p.style.animationDuration = (10 + Math.random() * 8) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 18000);
+        }
+        setInterval(randomParticle, 950);
+        for(let i=0; i<10; i++) setTimeout(randomParticle, 120 + i*230);
+    </script>
+</body>
+</html>
