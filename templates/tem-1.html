@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nyxian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fuentes: Montserrat (texto) y Archivo Black (títulos, botones) -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #6D5BFF;
+            --accent-light: #AD9BFF;
+            --bg-main: #181A20;
+            --bg-card: #23253A;
+            --text-main: #fff;
+            --text-secondary: #c3c3c3;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #23253a 0%, #6d5bff 100%);
+            color: var(--text-main);
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .nyxian-header {
+            margin-top: 56px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .nyxian-title {
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-size: 3rem;
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 0 2px 20px #6D5BFF88, 0 1px 2px #000a;
+            margin-bottom: 10px;
+        }
+        .nyxian-subtitle {
+            font-weight: 700;
+            color: var(--accent-light);
+            font-size: 1.2rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        .card {
+            background: var(--bg-card);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 36px 32px 30px 32px;
+            max-width: 420px;
+            width: 90vw;
+            margin: 0 auto 48px auto;
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1.2s cubic-bezier(.18,.89,.32,1.28);
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(56px);}
+            100% { opacity: 1; transform: translateY(0);}
+        }
+        .card h2 {
+            font-family: 'Archivo Black', Arial, sans-serif;
+            color: var(--accent);
+            font-size: 1.45rem;
+            margin: 0 0 12px 0;
+            letter-spacing: 2px;
+        }
+        .card p {
+            margin: 0 0 16px 0;
+            color: var(--text-secondary);
+            font-size: 1.11rem;
+            line-height: 1.65;
+            font-weight: 700;
+        }
+        /* Botón profesional */
+        .nyxian-btn {
+            padding: 13px 38px;
+            border: none;
+            border-radius: 13px;
+            background: linear-gradient(90deg, #6D5BFF 0%, #AD9BFF 100%);
+            color: #fff;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-size: 1.13rem;
+            letter-spacing: 1.3px;
+            box-shadow: 0 6px 20px 0 #6D5BFF44;
+            cursor: pointer;
+            font-weight: 400;
+            margin-top: 14px;
+            margin-bottom: 2px;
+            transition: transform 0.13s, box-shadow 0.18s, background 0.2s;
+        }
+        .nyxian-btn:hover {
+            transform: translateY(-2px) scale(1.06);
+            background: linear-gradient(90deg, #AD9BFF 0%, #6D5BFF 100%);
+            box-shadow: 0 10px 32px 0 #6D5BFF77;
+        }
+        /* Glow, partículas y wave effects */
+        .bg-glow {
+            position: fixed;
+            top: -120px;
+            left: 50%;
+            width: 660px;
+            height: 340px;
+            background: radial-gradient(circle, #ad9bff55 0%, #6d5bff11 80%);
+            filter: blur(40px);
+            opacity: 0.82;
+            pointer-events: none;
+            z-index: 0;
+            transform: translateX(-50%);
+            animation: pulseGlow 7s infinite alternate cubic-bezier(.65,.01,.32,1);
+        }
+        @keyframes pulseGlow {
+            0% { opacity: 0.70; }
+            100% { opacity: 0.92; }
+        }
+        .wave {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 150px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        /* Partículas flotantes */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: floatParticle 14s linear infinite;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(0) scale(1);}
+            80% { opacity: 0.23;}
+            100% { transform: translateY(-90vh) scale(1.13); opacity: 0;}
+        }
+        /* Créditos */
+        .nyxian-footer {
+            width: 100vw;
+            text-align: center;
+            color: #c3c3c3;
+            font-size: 1rem;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+            margin-top: 16px;
+            z-index: 3;
+            position: relative;
+        }
+        /* Oculta controles de audio */
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="nyxian-header">
+        <div class="nyxian-title">Nyxian</div>
+        <div class="nyxian-subtitle">Powered by ianalejandrook14x</div>
+    </div>
+    <div class="card">
+        <h2>Bienvenido</h2>
+        <p>
+            Hola.<br>
+        </p>
+        <button class="nyxian-btn" onclick="window.open('https://github.com/ianalejandrook14x','_blank')">Visitar mi GitHub</button>
+    </div>
+    <!-- SVG Wave -->
+    <svg class="wave" viewBox="0 0 1440 320">
+        <path fill="#6D5BFF" fill-opacity="0.17" d="M0,256L60,229.3C120,203,240,149,360,160C480,171,600,245,720,277.3C840,309,960,299,1080,277.3C1200,256,1320,224,1380,208L1440,192V320H1380C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320H0V256Z"></path>
+    </svg>
+    <!-- Música de fondo -->
+    <audio id="bgmusic" src="./audios/music.mp3" autoplay></audio>
+    <div class="nyxian-footer">
+        © 2025 Nyxian. Todos los derechos reservados. Creado por ianalejandrook14x
+    </div>
+    <script>
+        // Detener loop automático de la canción
+        const music = document.getElementById('bgmusic');
+        music.loop = false;
+        music.volume = 0.46;
+        // Autoplay para móviles: manejar interacción de usuario
+        document.body.addEventListener('click', () => { if(music.paused) music.play(); }, {once:true});
+
+        // Efecto de partículas visuales
+        function randomParticle() {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 30 + 16;
+            p.style.width = p.style.height = size + 'px';
+            p.style.left = Math.random() * 98 + 'vw';
+            p.style.bottom = '-50px';
+            p.style.background = `radial-gradient(circle, #fff 0%, #6d5bff 85%, #181A20 100%)`;
+            p.style.opacity = Math.random() * 0.27 + 0.13;
+            p.style.animationDuration = (9 + Math.random() * 9) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 17000);
+        }
+        setInterval(randomParticle, 900);
+
+      
+        music.addEventListener('ended', function(){
+          
+        });
+
+    
+        for(let i=0; i<8; i++) setTimeout(randomParticle, 300 + i*250);
+      
+        document.addEventListener('keydown', e => {
+            if (e.code === "Space") {
+                if (music.paused) music.play();
+                else music.pause();
+            }
+        });
+    </script>
+</body>
+</html>
