@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <title>Nyxian</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Montserrat y Archivo Black para botones y títulos -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap');
         :root {
             --bg-light: #fff;
             --bg-dark: #111;
@@ -33,23 +34,24 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            padding: 10px 18px;
+            padding: 8px 18px;
             font-size: 1rem;
             border: none;
-            border-radius: 6px;
-            background: #e0e0e0;
-            color: #222;
+            border-radius: 8px;
+            background: #111;
+            color: #fff;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, color 0.3s;
             z-index: 10;
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-weight: 700;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.10);
         }
         body.dark .toggle-btn {
-            background: #222;
-            color: #fff;
+            background: #fff;
+            color: #111;
         }
-        /* Centrado superior para el logo y título */
         .center-title {
             display: flex;
             flex-direction: column;
@@ -71,8 +73,9 @@
             font-size: 2.2rem;
             text-align: center;
             letter-spacing: 2px;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
         }
-        /* Botón hamburguesa */
         .menu-btn {
             position: absolute;
             top: 20px;
@@ -86,7 +89,6 @@
             font-family: 'Montserrat', Arial, sans-serif;
             font-weight: 700;
         }
-        /* Menú desplegable */
         .menu-dropdown {
             display: none;
             position: absolute;
@@ -130,7 +132,6 @@
         body.dark .menu-dropdown a:hover {
             background: #333;
         }
-        /* Footer personalizado */
         .footer-divider {
             width: 95vw;
             max-width: 680px;
@@ -155,7 +156,6 @@
         body.dark .footer-text {
             color: #bbb;
         }
-        /* Espaciado para el contenido principal */
         .main-content {
             margin-top: 48px;
             text-align: center;
@@ -167,7 +167,7 @@
         }
         .main-content .powered {
             margin-top: 32px;
-            margin-bottom: 80px;
+            margin-bottom: 20px;
             color: #aaa;
             font-size: 1rem;
             letter-spacing: 1px;
@@ -175,7 +175,36 @@
         body.dark .main-content .powered {
             color: #888;
         }
-
+        .main-content .overlay-btn-container {
+            margin-bottom: 80px;
+        }
+        /* Overlay button */
+        .show-overlay-btn {
+            margin: 0 auto;
+            display: block;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 40px;
+            font-size: 1.35rem;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+            transition: background 0.25s, color 0.25s;
+        }
+        .show-overlay-btn:hover {
+            background: #333;
+        }
+        body.dark .show-overlay-btn {
+            background: #fff;
+            color: #111;
+        }
+        body.dark .show-overlay-btn:hover {
+            background: #e0e0e0;
+        }
         /* === EFECTO DE ICONO EN CLICK === */
         .click-effect {
             position: fixed;
@@ -187,7 +216,6 @@
             opacity: 1;
             animation: pop-fade 0.5s forwards;
             will-change: transform, opacity, filter;
-            /* Sombra clara/oscura según modo */
             filter: drop-shadow(0 2px 10px #0002);
             transition: filter 0.3s;
         }
@@ -208,6 +236,70 @@
                 opacity: 0;
             }
         }
+        /* Overlay styles */
+        .overlay-bg {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(30,32,38,0.75);
+            z-index: 1000;
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+        .overlay-bg.active {
+            display: block;
+            opacity: 1;
+        }
+        .overlay-content {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.96);
+            background: #fff;
+            color: #232526;
+            border-radius: 14px;
+            box-shadow: 0 8px 48px rgba(0,0,0,0.18), 0 1.5px 5px rgba(0,0,0,0.07);
+            padding: 32px 28px 24px 28px;
+            min-width: 320px;
+            max-width: 92vw;
+            min-height: 120px;
+            max-height: 75vh;
+            z-index: 1100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .overlay-bg.active .overlay-content {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .close-btn {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: #555;
+            cursor: pointer;
+            font-family: inherit;
+            transition: color 0.2s;
+        }
+        .close-btn:hover {
+            color: #ff6a00;
+        }
+        @media (max-width: 500px) {
+            .overlay-content {
+                min-width: 0;
+                width: 92vw;
+                padding: 16px 10px 14px 10px;
+            }
+            .toggle-btn, .show-overlay-btn {
+                font-size: 1rem;
+                padding: 11px 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -218,7 +310,6 @@
         <a href="github.html">GitHub</a>
         <a href="contact.html">Contacto</a>
     </div>
-    <!-- CENTRADO ARRIBA -->
     <div class="center-title">
         <img id="logoImg" src="./images/logo.png" alt="Logo">
         <h1>Nyxian.xyz</h1>
@@ -227,6 +318,10 @@
     <div class="main-content">
         <p>Hola Bienvenido a Nyxian.xyz, un sitio web en progreso</p>
         <div class="powered">Powered by ianaleajandrook14x</div>
+        <!-- Aquí va el botón del overlay -->
+        <div class="overlay-btn-container">
+            <button class="show-overlay-btn" onclick="showOverlay()">Información</button>
+        </div>
     </div>
 
     <!-- FOOTER -->
@@ -235,40 +330,49 @@
         All rights reserved for Ianaleajndrook14x 2024
     </div>
 
+    <!-- OVERLAY -->
+    <div class="overlay-bg" id="overlayBg" tabindex="-1">
+        <div class="overlay-content" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
+            <button class="close-btn" onclick="hideOverlay()" title="Cerrar overlay">&times;</button>
+            <h2 id="overlayTitle" style="margin-top:0;">Nyxian.xyz</h2>
+            <p>ianalejandrook14x fue un creador de bots que empezó en Octubre de 2024, fue conocido por sus proyectos innovadores y buenas funciones, se retiró a inicios de enero por fines personales, pero se estima que en el 2026 lanzará un nuevo proyecto.</p>
+            <p>El proyecto será llamado "IanSyth"</p>
+            <hr style="margin: 18px 0;">
+            <p style="font-size:0.96em;color:#5a5a5a;">Presiona <b>ESC</b> para cerrar o haz clic fuera del cuadro.</p>
+        </div>
+    </div>
+
     <script>
+        // THEME TOGGLE
         const btn = document.getElementById('toggleTheme');
         const body = document.body;
-
-        // Leer el modo guardado en localStorage
         let darkMode = localStorage.getItem('darkMode') === 'true';
-
         function applyTheme() {
             const logoImg = document.getElementById('logoImg');
             if (darkMode) {
                 body.classList.add('dark');
                 btn.textContent = 'Oscuro 🌙';
                 if (logoImg) {
-                    logoImg.src = './images/logo.png'; // blanco para modo oscuro
+                    logoImg.src = './images/logo.png';
                     logoImg.style.filter = 'invert(0)';
                 }
             } else {
                 body.classList.remove('dark');
                 btn.textContent = 'Claro 🌞';
                 if (logoImg) {
-                    logoImg.src = './images/logo.png'; // usa el mismo logo pero invertido
+                    logoImg.src = './images/logo.png';
                     logoImg.style.filter = 'invert(1)';
                 }
             }
         }
-
         applyTheme();
-
         btn.addEventListener('click', () => {
             darkMode = !darkMode;
             localStorage.setItem('darkMode', darkMode);
             applyTheme();
         });
 
+        // MENÚ HAMBURGUESA
         const menuBtn = document.getElementById('menuBtn');
         const menuDropdown = document.getElementById('menuDropdown');
         menuBtn.addEventListener('click', (e) => {
@@ -282,35 +386,45 @@
             e.stopPropagation();
         });
 
-        // === EFECTO DE ICONO EN CLICK ===
+        // EFECTO ICONO CLIC
         document.addEventListener('click', function (e) {
-            // Evitar que al hacer click en el menú se genere el efecto
             if (e.target.closest('.menu-dropdown') || e.target.closest('.menu-btn')) return;
-            // Evitar que al cambiar el tema se genere el efecto
             if (e.target.closest('.toggle-btn')) return;
-
+            if (e.target.closest('.show-overlay-btn')) return; // no efecto sobre el overlay-btn
             const effect = document.createElement('img');
             effect.src = './images/icon-web.png';
             effect.className = 'click-effect';
-
-            // Ajustar la posición al sitio del click
             effect.style.left = e.clientX + 'px';
             effect.style.top = e.clientY + 'px';
-
-            // Ajustar el filtro si está en modo oscuro
             if (body.classList.contains('dark')) {
                 effect.style.filter += ' invert(1)';
             } else {
-                // Ya tiene filtro por CSS, pero asegúrate de quitar invert
                 effect.style.filter = effect.style.filter.replace('invert(1)', '');
             }
-
             document.body.appendChild(effect);
-
-            // Eliminar el icono después de la animación
             setTimeout(() => {
                 effect.remove();
             }, 500);
+        });
+
+        // OVERLAY LOGIC
+        const overlayBg = document.getElementById('overlayBg');
+        function showOverlay() {
+            overlayBg.classList.add('active');
+            setTimeout(() => {
+                overlayBg.querySelector('.overlay-content').focus();
+            }, 100);
+        }
+        function hideOverlay() {
+            overlayBg.classList.remove('active');
+        }
+        overlayBg.addEventListener('mousedown', function(e) {
+            if (e.target === overlayBg) hideOverlay();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlayBg.classList.contains('active')) {
+                hideOverlay();
+            }
         });
     </script>
 </body>
