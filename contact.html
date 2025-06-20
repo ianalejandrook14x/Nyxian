@@ -178,6 +178,37 @@
         body.dark .grey-divider {
             background: var(--divider-dark);
         }
+        /* ==== EFECTO DE ICONO EN CLICK ==== */
+        .click-effect {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            width: 44px;
+            height: 44px;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: pop-fade 0.5s forwards;
+            will-change: transform, opacity, filter;
+            filter: drop-shadow(0 2px 10px #0002);
+            transition: filter 0.3s;
+        }
+        body.dark .click-effect {
+            filter: drop-shadow(0 2px 10px #fff3);
+        }
+        @keyframes pop-fade {
+            0% {
+                transform: translate(-50%, -50%) scale(0.6);
+                opacity: 0.85;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.18) rotate(-10deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.6) rotate(10deg);
+                opacity: 0;
+            }
+        }
         /* Responsive */
         @media (max-width: 600px) {
             .contact-block .icon-wrapper {
@@ -191,6 +222,10 @@
             .grey-divider {
                 width: 90vw;
                 max-width: 220px;
+            }
+            .click-effect {
+                width: 32px;
+                height: 32px;
             }
         }
     </style>
@@ -271,6 +306,33 @@
         });
         menuDropdown.addEventListener('click', (e) => {
             e.stopPropagation();
+        });
+
+        // ===== EFECTO DE ICONO EN CLICK =====
+        document.addEventListener('click', function (e) {
+            // Evita que el efecto se muestre sobre el menú y el botón de tema
+            if (e.target.closest('.menu-dropdown') || e.target.closest('.menu-btn')) return;
+            if (e.target.closest('.toggle-btn')) return;
+
+            const effect = document.createElement('img');
+            effect.src = './images/icon-web.png';
+            effect.className = 'click-effect';
+
+            effect.style.left = e.clientX + 'px';
+            effect.style.top = e.clientY + 'px';
+
+            // Ajustar el filtro si está en modo oscuro
+            if (body.classList.contains('dark')) {
+                effect.style.filter += ' invert(1)';
+            } else {
+                effect.style.filter = effect.style.filter.replace('invert(1)', '');
+            }
+
+            document.body.appendChild(effect);
+
+            setTimeout(() => {
+                effect.remove();
+            }, 500);
         });
     </script>
 </body>
