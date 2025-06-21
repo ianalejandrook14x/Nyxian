@@ -205,25 +205,6 @@
         body.dark .show-overlay-btn:hover {
             background: #e0e0e0;
         }
-        /* --- RECTÁNGULO USUARIOS --- */
-        .users-rect {
-            margin: 0 auto 80px auto;
-            max-width: 300px;
-            padding: 18px 0;
-            border-radius: 18px;
-            background: #111;
-            color: #fff;
-            font-size: 1.18rem;
-            font-family: 'Montserrat', Arial, sans-serif;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.10);
-            font-weight: 700;
-            letter-spacing: 2px;
-            transition: background 0.3s, color 0.3s;
-        }
-        body.dark .users-rect {
-            background: #fff;
-            color: #111;
-        }
         /* === EFECTO DE ICONO EN CLICK === */
         .click-effect {
             position: fixed;
@@ -318,13 +299,6 @@
                 font-size: 1rem;
                 padding: 11px 14px;
             }
-            .users-rect {
-                max-width: 95vw;
-                transition: background 0.3s, color 0.3s;
-                font-family: 'Montserrat', Arial, sans-serif;
-                font-size: 0.5rem;
-                font-weight: 700
-            }
         }
     </style>
 </head>
@@ -349,8 +323,6 @@
         <div class="overlay-btn-container">
             <button class="show-overlay-btn" onclick="showOverlay()">Información</button>
         </div>
-        <!-- RECTÁNGULO DE USUARIOS (contador global) -->
-        <div id="usersRect" class="users-rect">Usuarios: <span id="userCount">0</span></div>
     </div>
 
     <!-- FOOTER -->
@@ -372,19 +344,6 @@
     </div>
 
     <script>
-        // ========== CONTADOR GLOBAL DE VISITAS ==========
-        function actualizarContadorGlobal() {
-            fetch('/api/visitas')
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('userCount').textContent = data.visitas;
-            })
-            .catch(() => {
-                document.getElementById('userCount').textContent = '??';
-            });
-        }
-        window.addEventListener('DOMContentLoaded', actualizarContadorGlobal);
-
         // THEME TOGGLE
         const btn = document.getElementById('toggleTheme');
         const body = document.body;
