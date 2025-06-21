@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Nyxian</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #10141b;
+      min-height: 100vh;
+      margin: 0;
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1.08em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      width: 100vw;
+      background: linear-gradient(90deg,#0cf2 0%,#111 90%);
+      box-shadow: 0 2px 20px #0cf2;
+      position: relative;
+      z-index: 10;
+    }
+    nav {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 66px;
+    }
+    nav .logo {
+      font-family: 'Archivo Black', Arial, sans-serif;
+      font-size: 2em;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 2px 10px #0cf7, 0 0px 22px #fff6;
+      user-select: none;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      display: inline-block;
+    }
+    nav ul li a, nav ul li button {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-family: 'Montserrat', Arial, sans-serif;
+      padding: 9px 20px;
+      border-radius: 7px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background .18s, color .18s;
+    }
+    nav ul li a:hover, nav ul li button:hover {
+      background: #0cf3;
+      color: #191b20;
+      box-shadow: 0 2px 10px #0cf6;
+    }
+    main {
+      flex: 1 0 auto;
+      width: 100vw;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 36px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .section {
+      margin: 38px 0 42px 0;
+      width: 90vw;
+      max-width: 600px;
+      padding: 20px 26px;
+      background: rgba(16,22,34,0.89);
+      border-radius: 16px;
+      box-shadow: 0 6px 30px #0cf1, 0 2px 18px #fff1;
+      position: relative;
+      z-index: 2;
+    }
+    .center {
+      text-align: center;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: center;
+      margin: 30px 0 12px 0;
+    }
+    .footer {
+      width: 100vw;
+      background: #15171c;
+      color: #bbb;
+      font-size: 1em;
+      text-align: center;
+      padding: 43px 0 14px 0;
+      margin-top: 40px;
+      letter-spacing: 1px;
+      border-top: 2px solid #0cf2;
+      box-shadow: 0 -2px 24px #0cf1;
+    }
+    /* Efectos seleccionados */
+    .efx-glow {
+      color: #fff;
+      background: #222;
+      padding: 5px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 16px #0cf, 0 0 32px #0cf;
+      animation: efx-glow-pulse 1.2s infinite alternate;
+    }
+    @keyframes efx-glow-pulse {
+      0% { box-shadow: 0 0 12px #0cf, 0 0 18px #0cf; }
+      100% { box-shadow: 0 0 24px #0ff, 0 0 44px #0ff; }
+    }
+    .efx-typing {
+      border-right: 2px solid #fff;
+      white-space: pre;
+      font-family: 'Fira Mono', monospace, monospace;
+      font-size: 1.18em;
+      font-weight: 700;
+      color: #0cf;
+      background: #191b20;
+      padding: 4px 17px;
+      border-radius: 6px;
+      min-width: 3ch;
+      display: inline-block;
+      letter-spacing: 1.2px;
+    }
+    .efx-lift-card {
+      background: #23242b;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #0005, 0 8px 40px #0cf2;
+      transition: transform 0.22s cubic-bezier(.7,.7,.2,1.4), box-shadow 0.38s;
+      padding: 28px 32px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1em;
+      margin: 24px auto;
+    }
+    .efx-lift-card:hover {
+      transform: translateY(-12px) scale(1.035) rotateX(6deg);
+      box-shadow: 0 10px 40px #0cf8, 0 2px 16px #fff2;
+    }
+    .efx-anim-border {
+      display:inline-block; padding:13px 23px;
+      border: 3px solid #fff2;
+      border-radius: 16px;
+      position:relative;
+      background: #16191c;
+      color:#fff;
+      font-weight: 700;
+      z-index: 10;
+      overflow:hidden;
+    }
+    .efx-anim-border:after {
+      content:"";
+      position:absolute; left:-70%; top:0; width:50%; height:100%;
+      background: linear-gradient(120deg, #00f0, #0cf7 30%, #0cf7 70%, #00f0 100%);
+      filter: blur(2px);
+      z-index: 1;
+      animation: efx-anim-border-move 2.5s infinite linear;
+    }
+    @keyframes efx-anim-border-move {
+      0% { left:-70%; }
+      100% { left:120%; }
+    }
+    .efx-bounce {
+      display: inline-block;
+      animation: efx-bounce 1.1s cubic-bezier(.21,.98,.6,.99) infinite alternate;
+    }
+    @keyframes efx-bounce {
+      0% { transform: translateY(0);}
+      40% { transform: translateY(-13px);}
+      100% { transform: translateY(0);}
+    }
+    .efx-neon-btn {
+      background: #191c20;
+      color:#fff;
+      border:2px solid #0cf;
+      border-radius:12px;
+      padding: 13px 35px;
+      font-size:1.07em;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 0 19px #0cf6, 0 0 40px #0cf1;
+      animation: efx-neon-btn-glow 1.2s infinite alternate;
+      text-shadow: 0 0 6px #0cff;
+      transition: background .18s, color .18s;
+    }
+    .efx-neon-btn:hover {
+      background: #0cf;
+      color: #222;
+    }
+    @keyframes efx-neon-btn-glow {
+      0% { box-shadow: 0 0 7px #0cf, 0 0 22px #0cf2;}
+      100% { box-shadow: 0 0 21px #0cf, 0 0 50px #0cf7;}
+    }
+    .efx-shake.active {
+      animation: efx-shake 0.7s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes efx-shake {
+      10%, 90% { transform: translateX(-1px);}
+      20%, 80% { transform: translateX(3px);}
+      30%, 50%, 70% { transform: translateX(-6px);}
+      40%, 60% { transform: translateX(6px);}
+    }
+    .efx-shake {
+      transition: box-shadow 0.2s;
+      box-shadow: 0 2px 8px #0cf3;
+      border-radius: 8px;
+      border: none;
+      background: #2a2a2a;
+      color: #fff;
+      padding: 11px 28px;
+      font-size: 1.1rem;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    /* Overlay */
+    .overlay-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(30,32,38,0.82);
+      z-index: 1000;
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+    .overlay-bg.active {
+      display: block;
+      opacity: 1;
+    }
+    .overlay-content {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.97);
+      background: #fff;
+      color: #232526;
+      border-radius: 14px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.18), 0 1.5px 5px rgba(0,0,0,0.07);
+      padding: 32px 28px 24px 28px;
+      min-width: 320px;
+      max-width: 92vw;
+      min-height: 120px;
+      max-height: 75vh;
+      z-index: 1100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .overlay-bg.active .overlay-content {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .close-btn {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.8em;
+      color: #555;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+    .close-btn:hover {
+      color: #0cf;
+    }
+    @media (max-width: 650px) {
+      nav .logo { font-size: 1.46em; }
+      main { padding: 10px 0 0 0; }
+      .section { max-width: 98vw; padding: 10px 5vw;}
+      .cards { flex-direction: column; gap: 18px;}
+      .overlay-content { min-width: 0; width: 93vw;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <span class="logo">
+        <span class="efx-glow">Nyxian</span>
+      </span>
+      <ul>
+        <li><button onclick="window.open('https://ianalejandrook15x.vercel.app/', '_blank')">Inicio</button></li>
+        <li><button onclick="window.open('https://github.com/ianalejandrook14x', '_blank')">GitHub</button></li>
+        <li><button onclick="window.open('https://wa.me/+5493876639332', '_blank')">Contacto</button></li>
+        <li><button class="show-overlay-btn" onclick="showOverlay()">Información</button></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div class="center" style="margin-top:45px; margin-bottom:22px;">
+      <span class="efx-glow" style="font-size:2em;">Bienvenido</span>
+    </div>
+    <div class="center" style="margin-bottom:30px;">
+      <span class="efx-typing" data-text="Desarrollador de bots de WhatsApp"></span>
+    </div>
+    <div class="section center">
+      <div class="efx-lift-card" style="width:240px; margin: 0 auto;">
+        <div class="efx-anim-border">
+          <span class="efx-bounce">Animaciones</span>
+        </div>
+        <div style="margin:12px 0 0 0;">
+          <span>Template.</span>
+        </div>
+      </div>
+      <div style="margin:22px 0 0 0;">
+        <button class="efx-neon-btn" style="font-size:1.1em;">Ver</button>
+        <button class="efx-shake" onclick="this.classList.add('active');setTimeout(()=>this.classList.remove('active'),700);" style="margin-left:18px;">Contáctame</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    All rights reserved for Ianalejandrook14x 2024 ©
+  </footer>
+
+  <!-- OVERLAY -->
+  <div class="overlay-bg" id="overlayBg" tabindex="-1">
+    <div class="overlay-content" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
+      <button class="close-btn" onclick="hideOverlay()" title="Cerrar overlay">&times;</button>
+      <h2 id="overlayTitle" style="margin-top:0;">Información</h2>
+      <p>Template by ianalejandrook14x</p>
+      <hr style="margin: 18px 0;">
+      <p style="font-size:0.96em;color:#5a5a5a;">Presiona <b>ESC</b> para cerrar o haz clic fuera del cuadro.</p>
+    </div>
+  </div>
+
+  <script>
+    // ========== TYPING EFFECT ==========
+    (function(){
+      var el = document.querySelector('.efx-typing');
+      if(!el) return;
+      var text = el.getAttribute('data-text');
+      let i=0;
+      function type() {
+        if(i <= text.length) {
+          el.innerHTML = text.slice(0,i) + '<span style="color:#fff;">|</span>';
+          i++; setTimeout(type, 70 + Math.random()*50);
+        } else {
+          el.innerHTML = text;
+        }
+      }
+      type();
+    })();
+    // ========== OVERLAY LOGIC ==========
+    const overlayBg = document.getElementById('overlayBg');
+    function showOverlay() {
+      overlayBg.classList.add('active');
+      setTimeout(() => {
+        overlayBg.querySelector('.overlay-content').focus();
+      }, 100);
+    }
+    function hideOverlay() {
+      overlayBg.classList.remove('active');
+    }
+    overlayBg.addEventListener('mousedown', function(e) {
+      if (e.target === overlayBg) hideOverlay();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlayBg.classList.contains('active')) {
+        hideOverlay();
+      }
+    });
+  </script>
+</body>
+</html>
