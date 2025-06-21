@@ -176,7 +176,7 @@
             color: #888;
         }
         .main-content .overlay-btn-container {
-            margin-bottom: 80px;
+            margin-bottom: 16px;
         }
         /* Overlay button */
         .show-overlay-btn {
@@ -203,6 +203,36 @@
             color: #111;
         }
         body.dark .show-overlay-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* =========================
+           Botón Comunidad (nuevo)
+        ========================= */
+        .comunidad-btn {
+            margin: 18px auto 0 auto;
+            display: block;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 38px;
+            font-size: 1.25rem;
+            font-family: 'Archivo Black', Arial, sans-serif;
+            font-weight: 400;
+            letter-spacing: 1.4px;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+            transition: background 0.25s, color 0.25s;
+        }
+        .comunidad-btn:hover {
+            background: #333;
+        }
+        body.dark .comunidad-btn {
+            background: #fff;
+            color: #111;
+        }
+        body.dark .comunidad-btn:hover {
             background: #e0e0e0;
         }
         /* === EFECTO DE ICONO EN CLICK === */
@@ -295,7 +325,7 @@
                 width: 92vw;
                 padding: 16px 10px 14px 10px;
             }
-            .toggle-btn, .show-overlay-btn {
+            .toggle-btn, .show-overlay-btn, .comunidad-btn {
                 font-size: 1rem;
                 padding: 11px 14px;
             }
@@ -317,11 +347,13 @@
     </div>
 
     <div class="main-content">
-        <p>Hola Bienvenido a Nyxian.xyz, un sitio web en progreso</p>
+        <p>Bienvenido a mi pagina web 🍃 - Nyxian</p>
         <div class="powered">Powered by ianaleajandrook14x</div>
-        <!-- Aquí va el botón del overlay -->
+        <!-- Botón del overlay -->
         <div class="overlay-btn-container">
             <button class="show-overlay-btn" onclick="showOverlay()">Información</button>
+            <!-- NUEVO BOTÓN COMUNIDAD -->
+            <button class="comunidad-btn" onclick="window.open('https://chat.whatsapp.com/DB8uNKNjsoRK4MvIrJDmZg','_blank')">Comunidad</button>
         </div>
     </div>
 
@@ -391,7 +423,8 @@
         document.addEventListener('click', function (e) {
             if (e.target.closest('.menu-dropdown') || e.target.closest('.menu-btn')) return;
             if (e.target.closest('.toggle-btn')) return;
-            if (e.target.closest('.show-overlay-btn')) return; // no efecto sobre el overlay-btn
+            if (e.target.closest('.show-overlay-btn')) return;
+            if (e.target.closest('.comunidad-btn')) return;
             const effect = document.createElement('img');
             effect.src = './images/icon-web.png';
             effect.className = 'click-effect';
