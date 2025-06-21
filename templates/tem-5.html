@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Galería de Cartas - EffectCards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Fuente para títulos -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #181921;
+      margin: 0;
+      color: #232;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1.08em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      width: 100vw;
+      background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+      box-shadow: 0 2px 20px #a18cd133;
+      padding: 0;
+      margin: 0 0 30px 0;
+    }
+    .logo {
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 2px 10px #a18cd1, 0 0px 22px #fff6;
+      padding: 30px 0 22px 0;
+      text-align: center;
+    }
+    main {
+      width: 100vw;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 0 32px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 36px;
+      justify-items: center;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr);}
+    }
+    @media (max-width: 640px) {
+      .gallery-grid { grid-template-columns: 1fr;}
+    }
+    .footer {
+      width: 100vw;
+      background: #15171c;
+      color: #bbb;
+      font-size: 1em;
+      text-align: center;
+      padding: 43px 0 14px 0;
+      margin-top: 40px;
+      letter-spacing: 1px;
+      border-top: 2px solid #a18cd133;
+      box-shadow: 0 -2px 24px #a18cd133;
+    }
+    /* ------- Nuevos efectos aesthetic y fluidos para cards ------- */
+    .ec-card-glass {
+      background: rgba(255,255,255,0.14);
+      border-radius: 22px;
+      box-shadow: 0 14px 40px 0 #a18cd180, 0 1px 8px #fff1;
+      backdrop-filter: blur(14px) brightness(1.13);
+      color: #232;
+      border:1.5px solid #a18cd180;
+      padding: 0;
+      margin: 0;
+      max-width: 310px;
+      min-width: 250px;
+      min-height: 400px;
+      transition: box-shadow 0.38s, transform 0.36s;
+      text-align: center;
+      position:relative;
+      overflow:hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      animation: cardFloat 4s ease-in-out infinite alternate;
+    }
+    .ec-card-glass:hover {
+      box-shadow: 0 28px 80px #fbc2ebcc, 0 4px 18px #fff3;
+      transform: scale(1.045) translateY(-12px) rotateZ(-1.3deg);
+    }
+    @keyframes cardFloat {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-13px);}
+    }
+    .ec-card-img-bg {
+      width: 100%;
+      height: 190px;
+      border-radius: 22px 22px 38px 38px;
+      background: #a18cd1;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 28px #a18cd133 inset;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .ec-card-img-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 22px 22px 38px 38px;
+      transition: filter .5s;
+      filter: brightness(0.98) saturate(1.13) blur(0.1px);
+    }
+    .ec-card-glass:hover .ec-card-img-bg img {
+      filter: brightness(1.1) saturate(1.24) blur(0px);
+      transform: scale(1.03);
+    }
+    .ec-card-badge {
+      position: absolute;
+      top: 14px;
+      right: 17px;
+      background: linear-gradient(90deg,#fbc2eb 0%,#a18cd1 100%);
+      color: #232;
+      font-size: 0.86em;
+      font-weight: bold;
+      padding: 7px 20px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px #fff8;
+      letter-spacing: 1.3px;
+      z-index: 3;
+      opacity: 0.95;
+      border: 1.5px solid #fff6;
+      transition: background 0.2s;
+    }
+    .ec-card-title {
+      font-size: 1.29em;
+      font-weight: bold;
+      text-align: center;
+      margin: 25px 0 0 0;
+      color: #232344;
+      text-shadow: 0 2px 18px #fff8;
+      letter-spacing: 1.2px;
+      z-index: 2;
+      position: relative;
+    }
+    .ec-card-desc {
+      font-size: 1em;
+      color: #5b5b6e;
+      margin: 17px 24px 0 24px;
+      line-height: 1.58;
+      min-height: 70px;
+      z-index: 2;
+      position: relative;
+    }
+    .ec-card-stats {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 29px 0 0 0;
+      z-index:2;
+    }
+    .ec-stat {
+      background: #fff;
+      color: #a18cd1;
+      font-weight: bold;
+      border-radius: 10px;
+      padding: 7px 21px;
+      font-size: 1.02em;
+      box-shadow: 0 1px 8px #a18cd122;
+      border: 1.2px solid #a18cd122;
+      transition: background 0.15s, color 0.15s;
+    }
+    .ec-card-glass:hover .ec-stat {
+      background: #fbc2eb;
+      color: #232;
+    }
+    /* Ripple hover effect on card */
+    .ec-card-glass:after {
+      content: "";
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 0; height: 0;
+      background: radial-gradient(circle, #fbc2eb44 0%, #a18cd180 100%);
+      border-radius: 50%;
+      transform: translate(-50%,-50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .19s, width .47s cubic-bezier(.7,1.2,.3,1), height .47s cubic-bezier(.7,1.2,.3,1);
+      z-index: 0;
+    }
+    .ec-card-glass:active:after {
+      width: 260px;
+      height: 260px;
+      opacity: 0.16;
+      transition: opacity .14s, width .23s, height .23s;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Made in Ianalejandrook14x<div>
+  </header>
+  <main>
+    <section>
+      <div class="gallery-grid">
+        <!-- Card 1 -->
+        <div class="ec-card-glass">
+          <div class="ec-card-badge">Legendaria</div>
+          <div class="ec-card-img-bg">
+            <img src="https://qu.ax/FnUHV.jpg" alt="Imagen 1">
+          </div>
+          <div class="ec-card-title">Nino Nakano</div>
+          <div class="ec-card-desc">
+            Es una de las quintillizas de The Quintessential Quintuplets, de carácter fuerte y decidido, pero con un lado dulce cuando se enamora.
+          </div>
+          <div class="ec-card-stats">
+            <div class="ec-stat">Poder: 87</div>
+            <div class="ec-stat">Rango: S</div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="ec-card-glass">
+          <div class="ec-card-badge">Legendaria</div>
+          <div class="ec-card-img-bg">
+            <img src="https://qu.ax/DwRoz.jpg" alt="Imagen 2">
+          </div>
+          <div class="ec-card-title">Akari Watanabe</div>
+          <div class="ec-card-desc">
+            Es una chica linda y directa de Kubo Won't Let Me Be Invisible, conocida por su personalidad juguetona y su ternura natural.
+          </div>
+          <br>
+          <div class="ec-card-stats">
+            <div class="ec-stat">Poder: 72</div>
+            <div class="ec-stat">Rango: S</div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="ec-card-glass">
+          <div class="ec-card-badge">Legendaria</div>
+          <div class="ec-card-img-bg">
+            <img src="https://qu.ax/XHaCb.jpg" alt="Imagen 3">
+          </div>
+          <div class="ec-card-title">Marin Kitagawa</div>
+          <div class="ec-card-desc">
+            Es una chica alegre y extrovertida de Sono Bisque Doll, apasionada por el cosplay y el anime.
+          </div>
+          <br>
+          <br>
+          <div class="ec-card-stats">
+            <div class="ec-stat">Poder: 74</div>
+            <div class="ec-stat">Rango: S</div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="ec-card-glass">
+          <div class="ec-card-badge">Legendaria</div>
+          <div class="ec-card-img-bg">
+            <img src="https://qu.ax/HLOwK.jpg" alt="Imagen 4">
+          </div>
+          <div class="ec-card-title">Akeno Himejima</div>
+          <div class="ec-card-desc">
+            Es una chica elegante y poderosa de High School DxD, conocida por su personalidad seductora y su lado sádico en combate.
+          </div>
+          <div class="ec-card-stats">
+            <div class="ec-stat">Poder: 69</div>
+            <div class="ec-stat">Rango: S</div>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="ec-card-glass">
+          <div class="ec-card-badge">Legendaria</div>
+          <div class="ec-card-img-bg">
+            <img src="https://qu.ax/qbMko.jpg" alt="Imagen 5">
+          </div>
+          <div class="ec-card-title">Tsukasa Yuzaki</div>
+          <div class="ec-card-desc">
+            Es una chica misteriosa y dulce que se casa repentinamente con Nasa, ocultando un pasado intrigante.
+          </div>
+          <div class="ec-card-stats">
+            <div class="ec-stat">Poder: 60</div>
+            <div class="ec-stat">Rango: S</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="ec-card-glass" style="margin-top:44px;min-height:unset;">
+      <div class="ec-card-title">Cartas</div>
+      <div class="ec-card-desc" style="min-height:unset;">
+        Toca para ver su animación.<br>
+        <span style="font-size:0.94em; color:#a18cd1;">C++</span>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    Galería EffectCards | All rights reserved for Ianalejandrook14x 2024 ©
+  </footer>
+</body>
+</html>
