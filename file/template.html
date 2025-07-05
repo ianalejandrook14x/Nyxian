@@ -279,7 +279,6 @@
         renderConfession();
       }
     };
-    // Modal y navegación
     const infoBtn = document.getElementById('infoBtn');
     const modalBg = document.getElementById('modalBg');
     const closeBtn = document.getElementById('closeBtn');
@@ -296,7 +295,7 @@
       if (e.key === 'ArrowRight') nextBtn.click();
       if (e.key === 'Escape') closeBtn.click();
     });
-    // Fondo corazones normales
+    // Fondo corazones normales (MENOS corazones: solo 8)
     const canvas = document.getElementById('particles-bg');
     const ctx = canvas.getContext('2d');
     let W = window.innerWidth, H = window.innerHeight;
@@ -313,7 +312,8 @@
     }
     const hearts = [];
     const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
-    for(let i=0;i<28;i++){
+    // MENOS corazones (antes 28), ahora 8:
+    for(let i=0;i<8;i++){
       hearts.push({
         x: randomBetween(0, W),
         y: randomBetween(0, H),
@@ -364,7 +364,6 @@
     }
     animate();
   </script>
-  <!-- Vincula el JS externo del efecto de corazones volando -->
   <script src="/js/drawEffect.js"></script>
 </body>
 </html>
