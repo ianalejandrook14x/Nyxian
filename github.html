@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Nyxian</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Montserrat y Archivo Black para botones, títulos y labels -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap');
         :root {
@@ -121,11 +120,11 @@
             width: 60px;
             height: 60px;
             margin-bottom: 10px;
-            filter: brightness(0) invert(0); /* Logo PNG: negro en claro */
+            filter: brightness(0) invert(0);
             transition: filter 0.3s;
         }
         body.dark .center-title img {
-            filter: brightness(0) invert(1); /* Logo PNG: blanco en oscuro */
+            filter: brightness(0) invert(1);
         }
         .center-title h1 {
             margin: 0;
@@ -197,7 +196,6 @@
             align-items: center;
             margin-bottom: 4px;
         }
-        /* GitHub sección final */
         .github-section {
             display: flex;
             flex-direction: column;
@@ -217,12 +215,12 @@
             width: 56px;
             height: 56px;
             object-fit: contain;
-            filter: brightness(0) invert(0); /* Logo PNG: negro en claro */
+            filter: brightness(0) invert(0);
             transition: filter 0.3s;
             cursor: pointer;
         }
         body.dark .github-icon-wrapper img {
-            filter: brightness(0) invert(1); /* Logo PNG: blanco en oscuro */
+            filter: brightness(0) invert(1);
         }
         .github-label {
             font-size: 1.15rem;
@@ -235,15 +233,14 @@
             width: 80px;
             height: 80px;
             object-fit: contain;
-            filter: brightness(0) invert(0); /* Logo PNG: negro en claro */
+            filter: brightness(0) invert(0);
             transition: filter 0.3s;
             cursor: pointer;
             margin-top: 12px;
         }
         body.dark .github-logo-link img {
-            filter: brightness(0) invert(1); /* Logo PNG: blanco en oscuro */
+            filter: brightness(0) invert(1);
         }
-        /* ==== EFECTO DE ICONO EN CLICK ==== */
         .click-effect {
             position: fixed;
             pointer-events: none;
@@ -274,7 +271,6 @@
                 opacity: 0;
             }
         }
-        /* Responsive */
         @media (max-width: 900px) {
             .collab-row {
                 gap: 18px;
@@ -382,7 +378,6 @@
             applyTheme();
         });
 
-        // Menú desplegable hamburguesa
         const menuBtn = document.getElementById('menuBtn');
         const menuDropdown = document.getElementById('menuDropdown');
         menuBtn.addEventListener('click', (e) => {
@@ -396,9 +391,7 @@
             e.stopPropagation();
         });
 
-        // ===== EFECTO DE ICONO EN CLICK =====
         document.addEventListener('click', function (e) {
-            // Evita que el efecto se muestre sobre el menú y el botón de tema
             if (e.target.closest('.menu-dropdown') || e.target.closest('.menu-btn')) return;
             if (e.target.closest('.toggle-btn')) return;
 
@@ -409,7 +402,6 @@
             effect.style.left = e.clientX + 'px';
             effect.style.top = e.clientY + 'px';
 
-            // Ajustar el filtro si está en modo oscuro
             if (body.classList.contains('dark')) {
                 effect.style.filter += ' invert(1)';
             } else {
