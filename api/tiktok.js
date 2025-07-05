@@ -12,30 +12,26 @@
  * 📦  Sin dependencias externas. Node >= 18 (fetch integrado).
  */
 
-// Helper ─ convierte bytes a MB con un decimal
 const toMB = (bytes = 0) => bytes ? `${(bytes / (1024 * 1024)).toFixed(1)} MB` : '0 MB';
 
 module.exports = async function handler(req, res) {
-  // CORS: permite llamadas desde cualquier origen y maneja preflight (OPTIONS)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   if (req.method !== 'GET') {
-    return res.status(405).json({ creator: 'Ian', status: false, error: 'Only GET supported' });
+    return res.status(405).json({ creator: 'ianalejandrook15x', status: false, error: 'Only GET supported' });
   }
 
-  // Extrae la query `url` (Vercel ya parsea req.query)
   const tiktokURL = req.query?.url;
   if (!tiktokURL) {
-    return res.status(400).json({ creator: 'Ian', status: false, error: 'Missing `url` query parameter' });
+    return res.status(400).json({ creator: 'ianalejandrook15x', status: false, error: 'Missing `url` query parameter' });
   }
 
   const t0 = Date.now();
 
   try {
-    // Consulta a Tikwm
     const upstream = await fetch(`https://tikwm.com/api/?url=${encodeURIComponent(tiktokURL)}`);
     if (!upstream.ok) throw new Error(`Upstream error ${upstream.status}`);
 
@@ -44,7 +40,6 @@ module.exports = async function handler(req, res) {
 
     const t1 = Date.now();
 
-    // Construye la respuesta normalizada
     return res.status(200).json({
       creator: 'Ian',
       status: true,
@@ -62,23 +57,23 @@ module.exports = async function handler(req, res) {
         published: data.create_time || 0,
         author: {
           id: data.author?.id || '',
-          username: data.author?.unique_id || '',
+          username: data.author?.unique_id ? `@${data.author.unique_id}` : '',
           nickname: data.author?.nickname || '',
         },
         music: {
-          title: data.music?.title || '',
+          title: data.music?.title || data.music?.original || '',
           author: data.music?.author || '',
           duration: data.music?.duration || 0,
         },
         media: {
           type: 'video',
-          size_org: toMB(data.size),
-          size_wm: toMB(data.size_wm),
-          size_hd: toMB(data.size_hd),
-          org: data.play || '',
+          size_org: toMB(data.size || 0),
+          size_wm: toMB(data.size_wm || 0),
+          size_hd: toMB(data.size_hd || 0),
+          org: data.play || data.video || '',
           wm: data.wmplay || '',
           hd: data.hdplay || '',
-          music: data.music?.play_url || '',
+          music: data.music?.play_url || data.music?.url || '',
         },
       },
     });
