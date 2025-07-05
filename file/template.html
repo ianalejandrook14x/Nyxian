@@ -210,6 +210,24 @@
       letter-spacing: 0.04em;
       opacity: 0.7;
     }
+    /* --- Estrella click effect --- */
+    .click-effect {
+      position: fixed;
+      width: 38px;
+      height: 38px;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(1);
+      transition: opacity 0.25s, transform 0.5s cubic-bezier(.2,1.4,.6,1.1);
+      opacity: 1;
+      z-index: 10000;
+      filter: invert(1) drop-shadow(0 0 8px #fff) brightness(1.6);
+      animation: star-pop 0.5s forwards;
+    }
+    @keyframes star-pop {
+      0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.8;}
+      70% { transform: translate(-50%, -50%) scale(1.2); opacity: 1;}
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0;}
+    }
     @media (max-width: 500px) {
       h1 { font-size: 2.2rem;}
       .modal-content { padding: 1.2rem 0.5rem;}
@@ -219,6 +237,7 @@
       .nav-btns { gap: 1rem;}
       .big-heart-svg { width: 55px; height: 55px;}
       .big-heart-btn { margin-top: 1.5rem;}
+      .click-effect { width: 28px; height: 28px; }
     }
   </style>
 </head>
@@ -363,6 +382,22 @@
       requestAnimationFrame(animate);
     }
     animate();
+
+    // Efecto ESTRELLA al hacer click en cualquier parte
+    document.addEventListener('click', function (e) {
+      // Si quieres evitar zonas específicas, usa .closest('.menu-dropdown') aquí:
+      // if (e.target.closest('.menu-dropdown')) return;
+      const effect = document.createElement('img');
+      effect.src = './images/icon-web.png';
+      effect.className = 'click-effect';
+      effect.style.left = e.clientX + 'px';
+      effect.style.top = e.clientY + 'px';
+      effect.style.filter = 'invert(1) drop-shadow(0 0 8px #fff) brightness(1.6)';
+      document.body.appendChild(effect);
+      setTimeout(() => {
+        effect.remove();
+      }, 500);
+    });
   </script>
   <script src="/js/drawEffect.js"></script>
 </body>
