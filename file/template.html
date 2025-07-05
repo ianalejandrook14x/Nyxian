@@ -228,7 +228,6 @@
   <div class="container">
     <h1>Valentina</h1>
     <button class="info-btn" id="infoBtn">Información</button>
-    <!-- Corazón grande debajo -->
     <button class="big-heart-btn" id="bigHeartBtn" aria-label="Corazón">
       <svg class="big-heart-svg" viewBox="0 0 60 60" fill="none">
         <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"
@@ -366,8 +365,7 @@
       requestAnimationFrame(animate);
     }
     animate();
-    // ===================== EFECTO CORAZONES VOLANDO =======================
-    // Canvas para corazones volando (por encima del fondo pero debajo de UI)
+    // ===================== EFECTO CORAZONES VOLANDO - 30 FPS =======================
     const flyingHeartsCanvas = document.getElementById('flying-hearts-canvas');
     const flyingCtx = flyingHeartsCanvas.getContext('2d');
     resizeCanvas();
@@ -404,27 +402,28 @@
       ctx.restore();
     };
 
-    // --- Control de corazones voladores
     let flyingHeartsActive = false;
     let flyingHearts = [];
     let flyingHeartsTimeout = null;
     let flyingHeartsStartTime = 0;
+    let flyingHeartsInterval = null;
 
     function startFlyingHearts() {
-      // Si ya hay uno activo, lo reiniciamos (parar y empezar de nuevo)
       flyingHeartsActive = false;
       if (flyingHeartsTimeout) clearTimeout(flyingHeartsTimeout);
+      if (flyingHeartsInterval) clearInterval(flyingHeartsInterval);
       flyingHearts = [];
       flyingCtx.clearRect(0,0,W,H);
 
       flyingHeartsActive = true;
       flyingHeartsStartTime = performance.now();
-      // Lanzar corazones cada 60ms durante 3s
+      const heartsPerFrame = 1; // solo 1 por ciclo
+      const heartInterval = 110; // cada 110 ms (menos corazones)
+
       function launchHearts() {
         if (!flyingHeartsActive) return;
         let now = performance.now();
-        // Lanzar varios por frame para que sea más fluido
-        for (let i = 0; i < 3; ++i) {
+        for (let i = 0; i < heartsPerFrame; ++i) {
           const x = randomBetween(30, W-30);
           const size = randomBetween(20, 48);
           const color = colors[Math.floor(Math.random()*colors.length)];
@@ -433,61 +432,53 @@
           const rotateSpeed = randomBetween(-0.005, 0.005);
           flyingHearts.push(new FlyingHeart(x, H+size, size, color, speed, dx, rotateSpeed));
         }
-        if (now - flyingHeartsStartTime < 3000) {
-          setTimeout(launchHearts, 60);
+        if (now - flyingHeartsStartTime < 5000) {
+          setTimeout(launchHearts, heartInterval);
         }
       }
       launchHearts();
 
-      // Parar corazoncitos y limpiar después de 3s
+      function drawFlyingHearts() {
+        flyingCtx.clearRect(0,0,W,H);
+        let time = performance.now()/4000;
+        for (let h of flyingHearts) {
+          h.draw(flyingCtx, time);
+        }
+      }
+      function updateFlyingHearts() {
+        for (let h of flyingHearts) {
+          h.y -= h.speed;
+          h.x += h.dx;
+          h.rotate += h.rotateSpeed;
+        }
+        flyingHearts = flyingHearts.filter(h => h.y + h.size > -20 && h.opacity > 0.01);
+        drawFlyingHearts();
+      }
+      flyingHeartsInterval = setInterval(updateFlyingHearts, 33); // 30 FPS
+
       flyingHeartsTimeout = setTimeout(() => {
         flyingHeartsActive = false;
-        // Fade out todos
         const fadeStart = performance.now();
         function fade() {
           let elapsed = performance.now()-fadeStart;
           let ratio = Math.max(0, 1-elapsed/600);
           for (let h of flyingHearts) h.opacity = ratio;
           drawFlyingHearts();
-          if (ratio>0) requestAnimationFrame(fade);
-          else flyingHearts = [];
+          if (ratio>0) setTimeout(fade, 33);
+          else {
+            flyingHearts = [];
+            clearInterval(flyingHeartsInterval);
+            drawFlyingHearts();
+          }
         }
         fade();
-      }, 3000);
+      }, 5000); // dura 5 segundos
     }
 
-    function drawFlyingHearts() {
-      flyingCtx.clearRect(0,0,W,H);
-      let time = performance.now()/4000;
-      for (let h of flyingHearts) {
-        h.draw(flyingCtx, time);
-      }
-    }
-
-    function animateFlyingHearts() {
-      if (flyingHearts.length || flyingHeartsActive) {
-        // Actualizar posiciones
-        for (let h of flyingHearts) {
-          h.y -= h.speed;
-          h.x += h.dx;
-          // Un poco de "rotación"
-          h.rotate += h.rotateSpeed;
-        }
-        // Limpiar corazones que ya salieron de la pantalla
-        flyingHearts = flyingHearts.filter(h => h.y + h.size > -20 && h.opacity > 0.01);
-        drawFlyingHearts();
-      }
-      requestAnimationFrame(animateFlyingHearts);
-    }
-    animateFlyingHearts();
-
-    // ========== BOTÓN CORAZÓN GRANDE ============
     const bigHeartBtn = document.getElementById('bigHeartBtn');
     bigHeartBtn.addEventListener('click', () => {
-      // Animación latido
       bigHeartBtn.classList.add('heart-animate');
       setTimeout(()=>bigHeartBtn.classList.remove('heart-animate'), 600);
-      // Corazones volando
       startFlyingHearts();
     });
   </script>
