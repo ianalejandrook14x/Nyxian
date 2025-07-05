@@ -1,4 +1,4 @@
-
+// Efecto corazones volando (pocos corazones, duración 5s, sin brillo)
 (function() {
   const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
   const flyingHeartsCanvas = document.getElementById('flying-hearts-canvas');
@@ -63,19 +63,19 @@
 
     flyingHeartsActive = true;
     flyingHeartsStartTime = performance.now();
-    const heartsPerFrame = 1;
-    const heartInterval = 110; // cada 110 ms
+    const heartsPerFrame = 1; // solo 1 por ciclo
+    const heartInterval = 180; // cada 180 ms (menos corazones aún)
 
     function launchHearts() {
       if (!flyingHeartsActive) return;
       let now = performance.now();
       for (let i = 0; i < heartsPerFrame; ++i) {
         const x = randomBetween(30, W-30);
-        const size = randomBetween(20, 48);
+        const size = randomBetween(18, 32); // más pequeños
         const color = colors[Math.floor(Math.random()*colors.length)];
-        const speed = randomBetween(2.3, 3.8); // px/frame
-        const dx = randomBetween(-0.7,0.7);
-        const rotateSpeed = randomBetween(-0.005, 0.005);
+        const speed = randomBetween(2.2, 3.2); // px/frame
+        const dx = randomBetween(-0.5,0.5); // menos desplazamiento lateral
+        const rotateSpeed = randomBetween(-0.004, 0.004);
         flyingHearts.push(new FlyingHeart(x, H+size, size, color, speed, dx, rotateSpeed));
       }
       if (now - flyingHeartsStartTime < 5000) {
