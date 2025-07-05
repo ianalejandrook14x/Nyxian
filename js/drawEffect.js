@@ -118,7 +118,7 @@
         }
       }
       fade();
-    }, 5000); // dura 5 segundos
+    }, 5000); // duración 5 segundos
   };
 
   document.addEventListener('DOMContentLoaded', function() {
