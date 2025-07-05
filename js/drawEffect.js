@@ -100,7 +100,7 @@
       flyingHearts = flyingHearts.filter(h => h.y + h.size > -20 && h.opacity > 0.01);
       drawFlyingHearts();
     }
-    flyingHeartsInterval = setInterval(updateFlyingHearts, 33); // 30 FPS
+    flyingHeartsInterval = setInterval(updateFlyingHearts, 10); // 10 FPS
 
     flyingHeartsTimeout = setTimeout(() => {
       flyingHeartsActive = false;
@@ -118,7 +118,7 @@
         }
       }
       fade();
-    }, 5000); // duración 5 segundos
+    }, 5000); // dura 5 segundos
   };
 
   document.addEventListener('DOMContentLoaded', function() {
