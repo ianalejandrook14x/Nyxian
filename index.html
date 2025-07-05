@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Nyxian</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Montserrat y Archivo Black para botones y títulos -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@700&display=swap');
         :root {
@@ -178,7 +177,6 @@
         .main-content .overlay-btn-container {
             margin-bottom: 16px;
         }
-        /* Overlay button */
         .show-overlay-btn {
             margin: 0 auto;
             display: block;
@@ -205,10 +203,6 @@
         body.dark .show-overlay-btn:hover {
             background: #e0e0e0;
         }
-
-        /* =========================
-           Botón Comunidad (nuevo)
-        ========================= */
         .comunidad-btn {
             margin: 18px auto 0 auto;
             display: block;
@@ -235,7 +229,6 @@
         body.dark .comunidad-btn:hover {
             background: #e0e0e0;
         }
-        /* === EFECTO DE ICONO EN CLICK === */
         .click-effect {
             position: fixed;
             pointer-events: none;
@@ -266,7 +259,6 @@
                 opacity: 0;
             }
         }
-        /* Overlay styles */
         .overlay-bg {
             display: none;
             position: fixed;
@@ -349,21 +341,17 @@
     <div class="main-content">
         <p>Bienvenido a mi pagina web 🍃 - Nyxian</p>
         <div class="powered">Powered by ianaleajandrook14x</div>
-        <!-- Botón del overlay -->
         <div class="overlay-btn-container">
             <button class="show-overlay-btn" onclick="showOverlay()">Información</button>
-            <!-- NUEVO BOTÓN COMUNIDAD -->
             <button class="comunidad-btn" onclick="window.open('https://chat.whatsapp.com/DB8uNKNjsoRK4MvIrJDmZg','_blank')">Comunidad</button>
         </div>
     </div>
 
-    <!-- FOOTER -->
     <hr class="footer-divider">
     <div class="footer-text">
         All rights reserved for Ianalejandrook14x 2024 ©
     </div>
 
-    <!-- OVERLAY -->
     <div class="overlay-bg" id="overlayBg" tabindex="-1">
         <div class="overlay-content" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
             <button class="close-btn" onclick="hideOverlay()" title="Cerrar overlay">&times;</button>
@@ -376,7 +364,6 @@
     </div>
 
     <script>
-        // THEME TOGGLE
         const btn = document.getElementById('toggleTheme');
         const body = document.body;
         let darkMode = localStorage.getItem('darkMode') === 'true';
@@ -405,7 +392,6 @@
             applyTheme();
         });
 
-        // MENÚ HAMBURGUESA
         const menuBtn = document.getElementById('menuBtn');
         const menuDropdown = document.getElementById('menuDropdown');
         menuBtn.addEventListener('click', (e) => {
@@ -419,7 +405,6 @@
             e.stopPropagation();
         });
 
-        // EFECTO ICONO CLIC
         document.addEventListener('click', function (e) {
             if (e.target.closest('.menu-dropdown') || e.target.closest('.menu-btn')) return;
             if (e.target.closest('.toggle-btn')) return;
@@ -441,7 +426,6 @@
             }, 500);
         });
 
-        // OVERLAY LOGIC
         const overlayBg = document.getElementById('overlayBg');
         function showOverlay() {
             overlayBg.classList.add('active');
