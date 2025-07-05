@@ -21,12 +21,12 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   if (req.method !== 'GET') {
-    return res.status(405).json({ creator: 'ianalejandrook15x', status: false, error: 'Only GET supported' });
+    return res.status(405).json({ creator: 'Ian', status: false, error: 'Only GET supported' });
   }
 
   const tiktokURL = req.query?.url;
   if (!tiktokURL) {
-    return res.status(400).json({ creator: 'ianalejandrook15x', status: false, error: 'Missing `url` query parameter' });
+    return res.status(400).json({ creator: 'Ian', status: false, error: 'Missing `url` query parameter' });
   }
 
   const t0 = Date.now();
@@ -40,10 +40,10 @@ module.exports = async function handler(req, res) {
 
     const t1 = Date.now();
 
-    return res.status(200).json({
+    const response = {
       creator: 'Ian',
       status: true,
-      process: ((t1 - t0) / 1000).toFixed(4),
+      process: parseFloat(((t1 - t0) / 1000).toFixed(4)),
       data: {
         id: data.id || '',
         region: data.region || '',
@@ -76,7 +76,10 @@ module.exports = async function handler(req, res) {
           music: data.music?.play_url || data.music?.url || '',
         },
       },
-    });
+    };
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.end(JSON.stringify(response, null, 2));
   } catch (err) {
     return res.status(500).json({ creator: 'Ian', status: false, error: err.message });
   }
