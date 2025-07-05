@@ -4,7 +4,151 @@
   <meta charset="UTF-8">
   <title>Valentina</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./css/lim-effect.css">
+  <style>
+    /* Fondo animado con gradiente y partículas */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
+      position: relative;
+    }
+
+    /* Canvas para partículas */
+    #particles-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin: 0 0 2rem 0;
+      color: #db2777;
+      text-shadow: 0 2px 16px #fff8, 0 6px 30px #db277766;
+      animation: popIn 1s cubic-bezier(.29,1.64,.58,.98);
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8);}
+      to { opacity: 1; transform: scale(1);}
+    }
+
+    .info-btn {
+      font-size: 1.2rem;
+      color: white;
+      background: linear-gradient(90deg, #f472b6 30%, #f9a8d4 100%);
+      border: none;
+      border-radius: 2rem;
+      padding: 1rem 2.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #db277755;
+      transition: transform 0.15s, background 0.5s;
+      margin-top: 1rem;
+    }
+    .info-btn:hover {
+      transform: scale(1.07);
+      background: linear-gradient(90deg, #f472b6 0%, #db2777 100%);
+    }
+
+    .modal-bg {
+      display: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(255, 182, 193, 0.75);
+      z-index: 10;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-bg.active {
+      display: flex;
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px #db277777;
+      padding: 2.5rem 3rem;
+      text-align: center;
+      position: relative;
+      min-width: 300px;
+      max-width: 90vw;
+      animation: modalPop 0.5s cubic-bezier(.29,1.64,.58,.98);
+    }
+
+    @keyframes modalPop {
+      from { opacity: 0; transform: translateY(40px) scale(0.8);}
+      to { opacity: 1; transform: translateY(0) scale(1);}
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.7rem;
+      font-size: 2rem;
+      color: #f472b6;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .close-btn:hover {
+      color: #db2777;
+    }
+
+    .confession-text {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #db2777;
+      text-shadow: 0 2px 12px #f9a8d477;
+      margin-top: 1rem;
+      letter-spacing: 0.05em;
+      /* Animación de texto */
+      animation: rainbow 2s linear infinite, fadeInConfess 1.2s;
+      background: linear-gradient(90deg, #f472b6, #db2777, #f9a8d4, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @keyframes rainbow {
+      0% {background-position: 0%;}
+      100% {background-position: 100%;}
+    }
+    @keyframes fadeInConfess {
+      from {opacity: 0; transform: scale(1.15);}
+      to {opacity: 1; transform: scale(1);}
+    }
+
+    @media (max-width: 500px) {
+      h1 { font-size: 2.2rem;}
+      .modal-content { padding: 1.2rem 0.5rem;}
+      .confession-text { font-size: 1.2rem;}
+      .info-btn { padding: 0.8rem 1.2rem;}
+    }
+  </style>
 </head>
 <body>
   <canvas id="particles-bg"></canvas>
@@ -16,17 +160,7 @@
     <div class="modal-content">
       <button class="close-btn" id="closeBtn" title="Cerrar">&times;</button>
       <div class="confession-text" id="confessionText">
-        Valentina:
-
-A veces me pongo a pensar en todo lo que hemos vivido… tres años compartiendo miradas, risas, silencios y momentos que se quedaron grabados. Aquellos días en los que tu abrazo era mi refugio, cuando todo tenía sentido solo con mirarte. Nunca imaginé cuánto valor tenían hasta que todo se detuvo.
-
-Hubo un tiempo en que nuestros caminos se separaron. No voy a mentirte: dolió. Sentí el vacío de no tenerte cerca, de no escuchar tu voz como antes, de no sentir tu presencia en los detalles pequeños. Pero incluso en la distancia, mi corazón seguía guardando un lugar para ti.
-
-Y hoy, después de todo, volvemos a estar aquí. No como los mismos de antes, sino como dos personas que han crecido, aprendido y que se han vuelto a elegir. Porque eso es lo más valioso.
-
-No prometo que siempre será fácil, pero sí te prometo que no soltaré tu mano. Que lucharé por ti, cada día. Porque si algo aprendí en este tiempo, es que mi lugar está contigo.
-
-Eres y siempre serás mi lugar favorito, ese que el tiempo no pudo borrar. Gracias por estar conmigo cuándo más lo necesite.
+        Valentina yo te quiero
       </div>
     </div>
   </div>
