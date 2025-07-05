@@ -13,13 +13,12 @@
       background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
       position: relative;
     }
-    #bg-hearts-canvas {
+    #particles-bg {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       z-index: 0;
       pointer-events: none;
-      display: block;
     }
     #flying-hearts-canvas {
       position: fixed;
@@ -50,56 +49,47 @@
       from { opacity: 0; transform: scale(0.8);}
       to { opacity: 1; transform: scale(1);}
     }
-    /* Ícono de correo grande y rosa */
-    #mailBtn {
-      background: none;
+    .info-btn {
+      font-size: 1.2rem;
+      color: white;
+      background: linear-gradient(90deg, #f472b6 30%, #f9a8d4 100%);
       border: none;
-      padding: 0;
+      border-radius: 2rem;
+      padding: 1rem 2.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #db277755;
+      transition: transform 0.15s, background 0.5s;
       margin-top: 1rem;
-      outline: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: none;
     }
-    .mail-icon {
-      width: 50;
-      height: 70px;
-      /* Filtro rosa fuerte */
-      filter: brightness(1.1) sepia(1) hue-rotate(-40deg) saturate(18) brightness(1.8);
-      display: block;
-      border-radius: 0;
-      transition: filter 0.3s;
+    .info-btn:hover {
+      transform: scale(1.07);
+      background: linear-gradient(90deg, #f472b6 0%, #db2777 100%);
     }
-    #mailBtn:active .mail-icon,
-    #mailBtn:hover .mail-icon {
-      filter: brightness(1.3) sepia(1) hue-rotate(-10deg) saturate(23) brightness(2.1);
-    }
-    /* Corazón bajo el correo */
-    #bigHeartBtn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .big-heart-btn {
       background: none;
       border: none;
-      margin-top: 1.1rem;
+      margin-top: 2.5rem;
       cursor: pointer;
       outline: none;
-      box-shadow: none;
-      padding: 0;
-      z-index: 3;
-    }
-    #bigHeartBtn:active .big-heart-svg,
-    #bigHeartBtn.heart-animate .big-heart-svg {
-      animation: heartBeat 0.6s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+      z-index: 2;
+      position: relative;
+      user-select: none;
     }
     .big-heart-svg {
-      width: 70px;
-      height: 70px;
-      display: block;
-      filter: drop-shadow(0 3px 10px #db277733);
+      width: 84px;
+      height: 84px;
       transition: filter 0.3s;
+      filter: drop-shadow(0 3px 16px #db277744);
+      will-change: transform;
+      display: block;
+    }
+    .big-heart-btn:active .big-heart-svg,
+    .big-heart-btn.heart-animate .big-heart-svg {
+      animation: heartBeat 0.6s;
     }
     @keyframes heartBeat {
       0%   { transform: scale(1);}
@@ -109,7 +99,6 @@
       70%  { transform: scale(0.97);}
       100% { transform: scale(1);}
     }
-    /* Modal */
     .modal-bg {
       display: none;
       position: fixed;
@@ -141,7 +130,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: visible;
     }
     @keyframes modalPop {
       from { opacity: 0; transform: translateY(40px) scale(0.8);}
@@ -240,32 +228,26 @@
       70% { transform: translate(-50%, -50%) scale(1.2); opacity: 1;}
       100% { transform: translate(-50%, -50%) scale(1); opacity: 0;}
     }
-    @media (max-width: 600px) {
+    @media (max-width: 500px) {
       h1 { font-size: 2.2rem;}
       .modal-content { padding: 1.2rem 0.5rem;}
       .confession-text { font-size: 1.05rem; min-height: 6em;}
-      .mail-icon { width: 64px; height: 64px; }
-      .big-heart-svg { width: 36px; height: 36px; }
-      #bigHeartBtn { margin-top: 0.5rem; }
+      .info-btn { padding: 0.8rem 1.2rem;}
       .nav-btn { font-size: 1.5rem;}
       .nav-btns { gap: 1rem;}
+      .big-heart-svg { width: 55px; height: 55px;}
+      .big-heart-btn { margin-top: 1.5rem;}
       .click-effect { width: 28px; height: 28px; }
     }
   </style>
 </head>
 <body>
-  <canvas id="bg-hearts-canvas"></canvas>
+  <canvas id="particles-bg"></canvas>
   <canvas id="flying-hearts-canvas"></canvas>
   <div class="container">
     <h1>Valentina</h1>
-    <!-- Ícono de correo grande -->
-    <button id="mailBtn" title="Mensaje">
-      <img class="mail-icon" src="./images/correo-log.png" alt="Correo"/>
-      <br>
-      <br>
-    </button>
-    <!-- Corazón bajo la carta -->
-    <button id="bigHeartBtn" aria-label="Corazón">
+    <button class="info-btn" id="infoBtn">Información</button>
+    <button class="big-heart-btn" id="bigHeartBtn" aria-label="Corazón">
       <svg class="big-heart-svg" viewBox="0 0 60 60" fill="none">
         <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"
           fill="#db2777" stroke="#f9a8d4" stroke-width="3"/>
@@ -284,7 +266,7 @@
     </div>
   </div>
   <script>
-    // ==================== MODAL, MENSAJE EN PARTES ===========================
+    // ==================== MODAL, INFO Y PARTICLES DE FONDO ===========================
     const confessionParts = [
       `Valentina:<br><br>
       A veces me pongo a pensar en todo lo que hemos vivido… tres años compartiendo miradas, risas, silencios y momentos que se quedaron grabados. Aquellos días en los que tu abrazo era mi refugio, cuando todo tenía sentido solo con mirarte. Nunca imaginé cuánto valor tenían hasta que todo se detuvo.`,
@@ -315,11 +297,10 @@
         renderConfession();
       }
     };
-    // Botón de correo
-    const mailBtn = document.getElementById('mailBtn');
+    const infoBtn = document.getElementById('infoBtn');
     const modalBg = document.getElementById('modalBg');
     const closeBtn = document.getElementById('closeBtn');
-    mailBtn.onclick = () => {
+    infoBtn.onclick = () => {
       modalBg.classList.add('active');
       confessionIndex = 0;
       renderConfession();
@@ -332,10 +313,76 @@
       if (e.key === 'ArrowRight') nextBtn.click();
       if (e.key === 'Escape') closeBtn.click();
     });
-
-    // Efecto ESTRELLA al hacer click en cualquier parte (no botones principales)
+    // Fondo corazones normales (MENOS corazones: solo 8)
+    const canvas = document.getElementById('particles-bg');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth, H = window.innerHeight;
+    function resizeCanvas() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    function randomBetween(a,b) {
+      return a + Math.random()*(b-a);
+    }
+    const hearts = [];
+    const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
+    // MENOS corazones (antes 28), ahora 8:
+    for(let i=0;i<8;i++){
+      hearts.push({
+        x: randomBetween(0, W),
+        y: randomBetween(0, H),
+        size: randomBetween(16,32),
+        color: colors[Math.floor(Math.random()*colors.length)],
+        speed: randomBetween(0.4,1.3),
+        dx: randomBetween(-0.3,0.3),
+        phase: Math.random()*Math.PI*2
+      });
+    }
+    function drawHeart(x, y, s, color, phase) {
+      ctx.save();
+      ctx.translate(x, y+Math.sin(performance.now()/700 + phase)*4);
+      ctx.rotate(Math.sin(performance.now()/500 + phase)*0.04);
+      ctx.scale(s/25, s/25);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(0, -8, -12, -12, -12, 0);
+      ctx.bezierCurveTo(-12, 10, 0, 14, 0, 22);
+      ctx.bezierCurveTo(0, 14, 12, 10, 12, 0);
+      ctx.bezierCurveTo(12, -12, 0, -8, 0, 0);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.65;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+    function animate() {
+      ctx.clearRect(0,0,W,H);
+      for(let h of hearts) {
+        drawHeart(h.x, h.y, h.size, h.color, h.phase);
+        h.y -= h.speed;
+        h.x += h.dx;
+        if(h.y < -30 || h.x < -30 || h.x > W+30){
+          h.x = randomBetween(0,W);
+          h.y = H+randomBetween(10,80);
+          h.size = randomBetween(16,32);
+          h.color = colors[Math.floor(Math.random()*colors.length)];
+          h.speed = randomBetween(0.4,1.3);
+          h.dx = randomBetween(-0.3,0.3);
+          h.phase = Math.random()*Math.PI*2;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+    
     document.addEventListener('click', function (e) {
-      if (e.target.closest('#mailBtn') || e.target.closest('#bigHeartBtn')) return;
       const effect = document.createElement('img');
       effect.src = '/images/icon-web.png';
       effect.className = 'click-effect';
@@ -348,80 +395,6 @@
       }, 500);
     });
   </script>
-  <!-- Corazones voladores al presionar el corazón (y fondo) -->
   <script src="/js/drawEffect.js"></script>
-  <script>
-    // ==================== FONDO: 8 corazones animados aleatorios ====================
-    (function() {
-      const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
-      const bgCanvas = document.getElementById('bg-hearts-canvas');
-      if(!bgCanvas) return;
-      const ctx = bgCanvas.getContext('2d');
-      let W = window.innerWidth, H = window.innerHeight;
-      function resizeCanvas() {
-        W = window.innerWidth;
-        H = window.innerHeight;
-        bgCanvas.width = W;
-        bgCanvas.height = H;
-      }
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
-
-      function randomBetween(a,b) {
-        return a + Math.random()*(b-a);
-      }
-      let hearts = [];
-      for(let i=0;i<8;i++){
-        hearts.push({
-          x: randomBetween(0, W),
-          y: randomBetween(0, H),
-          size: randomBetween(30,50),
-          color: colors[Math.floor(Math.random()*colors.length)],
-          speed: randomBetween(0.4,1.2),
-          dx: randomBetween(-0.25,0.25),
-          phase: Math.random()*Math.PI*2
-        });
-      }
-      function drawHeart(x, y, s, color, phase) {
-        ctx.save();
-        ctx.translate(x, y+Math.sin(performance.now()/700 + phase)*4);
-        ctx.rotate(Math.sin(performance.now()/500 + phase)*0.04);
-        ctx.scale(s/25, s/25);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(0, -8, -12, -12, -12, 0);
-        ctx.bezierCurveTo(-12, 10, 0, 14, 0, 22);
-        ctx.bezierCurveTo(0, 14, 12, 10, 12, 0);
-        ctx.bezierCurveTo(12, -12, 0, -8, 0, 0);
-        ctx.closePath();
-        ctx.globalAlpha = 0.5;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 8;
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        ctx.restore();
-      }
-      function animate() {
-        ctx.clearRect(0,0,W,H);
-        for(let h of hearts) {
-          drawHeart(h.x, h.y, h.size, h.color, h.phase);
-          h.y -= h.speed;
-          h.x += h.dx;
-          if(h.y < -30 || h.x < -30 || h.x > W+30){
-            h.x = randomBetween(0,W);
-            h.y = H+randomBetween(10,80);
-            h.size = randomBetween(30,50);
-            h.color = colors[Math.floor(Math.random()*colors.length)];
-            h.speed = randomBetween(0.4,1.2);
-            h.dx = randomBetween(-0.25,0.25);
-            h.phase = Math.random()*Math.PI*2;
-          }
-        }
-        requestAnimationFrame(animate);
-      }
-      animate();
-    })();
-  </script>
 </body>
 </html>
