@@ -20,6 +20,14 @@
       z-index: 0;
       pointer-events: none;
     }
+    #flying-hearts-canvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+      display: block;
+    }
     .container {
       position: relative;
       z-index: 1;
@@ -57,7 +65,6 @@
       transform: scale(1.07);
       background: linear-gradient(90deg, #f472b6 0%, #db2777 100%);
     }
-    /* Corazón grande, centrado debajo del botón Info */
     .big-heart-btn {
       background: none;
       border: none;
@@ -92,7 +99,6 @@
       70%  { transform: scale(0.97);}
       100% { transform: scale(1);}
     }
-    /* Modal y otras clases igual que antes... */
     .modal-bg {
       display: none;
       position: fixed;
@@ -204,27 +210,6 @@
       letter-spacing: 0.04em;
       opacity: 0.7;
     }
-    /* Efecto corazones volando */
-    .flying-heart {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      will-change: transform, opacity;
-      animation: flyHeart 2.2s ease-out forwards;
-    }
-    @keyframes flyHeart {
-      0% {
-        opacity: 1;
-        transform: scale(0.7) translateY(0) rotate(0deg);
-      }
-      85% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: scale(1.6) translateY(-110vh) rotate(45deg);
-      }
-    }
     @media (max-width: 500px) {
       h1 { font-size: 2.2rem;}
       .modal-content { padding: 1.2rem 0.5rem;}
@@ -239,6 +224,7 @@
 </head>
 <body>
   <canvas id="particles-bg"></canvas>
+  <canvas id="flying-hearts-canvas"></canvas>
   <div class="container">
     <h1>Valentina</h1>
     <button class="info-btn" id="infoBtn">Información</button>
@@ -262,7 +248,7 @@
     </div>
   </div>
   <script>
-    // Texto partido en partes
+    // ==================== MODAL, INFO Y PARTICLES DE FONDO ===========================
     const confessionParts = [
       `Valentina:<br><br>
       A veces me pongo a pensar en todo lo que hemos vivido… tres años compartiendo miradas, risas, silencios y momentos que se quedaron grabados. Aquellos días en los que tu abrazo era mi refugio, cuando todo tenía sentido solo con mirarte. Nunca imaginé cuánto valor tenían hasta que todo se detuvo.`,
@@ -271,7 +257,6 @@
       `No prometo que siempre será fácil, pero sí te prometo que no soltaré tu mano. Que lucharé por ti, cada día. Porque si algo aprendí en este tiempo, es que mi lugar está contigo.`,
       `Eres y siempre serás mi lugar favorito, ese que el tiempo no pudo borrar. Gracias por estar conmigo cuándo más lo necesite.`
     ];
-
     let confessionIndex = 0;
     const confessionText = document.getElementById('confessionText');
     const prevBtn = document.getElementById('prevBtn');
@@ -281,6 +266,7 @@
       confessionText.innerHTML = confessionParts[confessionIndex];
       prevBtn.disabled = confessionIndex === 0;
       nextBtn.disabled = confessionIndex === confessionParts.length - 1;
+      navIndicator.textContent = `Parte ${confessionIndex + 1} de ${confessionParts.length}`;
     }
     prevBtn.onclick = () => {
       if(confessionIndex > 0) {
@@ -294,7 +280,6 @@
         renderConfession();
       }
     };
-
     // Modal y navegación
     const infoBtn = document.getElementById('infoBtn');
     const modalBg = document.getElementById('modalBg');
@@ -312,8 +297,7 @@
       if (e.key === 'ArrowRight') nextBtn.click();
       if (e.key === 'Escape') closeBtn.click();
     });
-
-    // Partículas corazones animados en el fondo (igual que tu código original)
+    // Fondo corazones normales
     const canvas = document.getElementById('particles-bg');
     const ctx = canvas.getContext('2d');
     let W = window.innerWidth, H = window.innerHeight;
@@ -322,9 +306,11 @@
       H = window.innerHeight;
       canvas.width = W;
       canvas.height = H;
+      flyingHeartsCanvas.width = W;
+      flyingHeartsCanvas.height = H;
     }
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    // ======== PARTICULAS DE FONDO (estático, tu código) =========
     function randomBetween(a,b) {
       return a + Math.random()*(b-a);
     }
@@ -380,57 +366,130 @@
       requestAnimationFrame(animate);
     }
     animate();
+    // ===================== EFECTO CORAZONES VOLANDO =======================
+    // Canvas para corazones volando (por encima del fondo pero debajo de UI)
+    const flyingHeartsCanvas = document.getElementById('flying-hearts-canvas');
+    const flyingCtx = flyingHeartsCanvas.getContext('2d');
+    resizeCanvas();
 
-    // ---- EFECTO CORAZÓN GRANDE Y CORAZONES VOLANDO ----
+    function FlyingHeart(x, y, size, color, speed, dx, rotateSpeed) {
+      this.x = x;
+      this.y = y;
+      this.size = size;
+      this.color = color;
+      this.speed = speed;
+      this.dx = dx;
+      this.rotate = randomBetween(-0.2, 0.2);
+      this.rotateSpeed = rotateSpeed;
+      this.opacity = 1.0;
+    }
+    FlyingHeart.prototype.draw = function(ctx, time) {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotate + time * this.rotateSpeed);
+      ctx.scale(this.size/25, this.size/25);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(0, -8, -12, -12, -12, 0);
+      ctx.bezierCurveTo(-12, 10, 0, 14, 0, 22);
+      ctx.bezierCurveTo(0, 14, 12, 10, 12, 0);
+      ctx.bezierCurveTo(12, -12, 0, -8, 0, 0);
+      ctx.closePath();
+      ctx.fillStyle = this.color;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    };
+
+    // --- Control de corazones voladores
+    let flyingHeartsActive = false;
+    let flyingHearts = [];
+    let flyingHeartsTimeout = null;
+    let flyingHeartsStartTime = 0;
+
+    function startFlyingHearts() {
+      // Si ya hay uno activo, lo reiniciamos (parar y empezar de nuevo)
+      flyingHeartsActive = false;
+      if (flyingHeartsTimeout) clearTimeout(flyingHeartsTimeout);
+      flyingHearts = [];
+      flyingCtx.clearRect(0,0,W,H);
+
+      flyingHeartsActive = true;
+      flyingHeartsStartTime = performance.now();
+      // Lanzar corazones cada 60ms durante 3s
+      function launchHearts() {
+        if (!flyingHeartsActive) return;
+        let now = performance.now();
+        // Lanzar varios por frame para que sea más fluido
+        for (let i = 0; i < 3; ++i) {
+          const x = randomBetween(30, W-30);
+          const size = randomBetween(20, 48);
+          const color = colors[Math.floor(Math.random()*colors.length)];
+          const speed = randomBetween(2.3, 3.8); // px/frame
+          const dx = randomBetween(-0.7,0.7);
+          const rotateSpeed = randomBetween(-0.005, 0.005);
+          flyingHearts.push(new FlyingHeart(x, H+size, size, color, speed, dx, rotateSpeed));
+        }
+        if (now - flyingHeartsStartTime < 3000) {
+          setTimeout(launchHearts, 60);
+        }
+      }
+      launchHearts();
+
+      // Parar corazoncitos y limpiar después de 3s
+      flyingHeartsTimeout = setTimeout(() => {
+        flyingHeartsActive = false;
+        // Fade out todos
+        const fadeStart = performance.now();
+        function fade() {
+          let elapsed = performance.now()-fadeStart;
+          let ratio = Math.max(0, 1-elapsed/600);
+          for (let h of flyingHearts) h.opacity = ratio;
+          drawFlyingHearts();
+          if (ratio>0) requestAnimationFrame(fade);
+          else flyingHearts = [];
+        }
+        fade();
+      }, 3000);
+    }
+
+    function drawFlyingHearts() {
+      flyingCtx.clearRect(0,0,W,H);
+      let time = performance.now()/4000;
+      for (let h of flyingHearts) {
+        h.draw(flyingCtx, time);
+      }
+    }
+
+    function animateFlyingHearts() {
+      if (flyingHearts.length || flyingHeartsActive) {
+        // Actualizar posiciones
+        for (let h of flyingHearts) {
+          h.y -= h.speed;
+          h.x += h.dx;
+          // Un poco de "rotación"
+          h.rotate += h.rotateSpeed;
+        }
+        // Limpiar corazones que ya salieron de la pantalla
+        flyingHearts = flyingHearts.filter(h => h.y + h.size > -20 && h.opacity > 0.01);
+        drawFlyingHearts();
+      }
+      requestAnimationFrame(animateFlyingHearts);
+    }
+    animateFlyingHearts();
+
+    // ========== BOTÓN CORAZÓN GRANDE ============
     const bigHeartBtn = document.getElementById('bigHeartBtn');
     bigHeartBtn.addEventListener('click', () => {
       // Animación latido
       bigHeartBtn.classList.add('heart-animate');
       setTimeout(()=>bigHeartBtn.classList.remove('heart-animate'), 600);
-
-      // Efecto corazones volando (3 segundos)
-      triggerFlyingHearts();
+      // Corazones volando
+      startFlyingHearts();
     });
-
-    function triggerFlyingHearts() {
-      let flying = true;
-      const flyingDuration = 3000;
-      const flyingHearts = [];
-      const colorsFlying = ['#db2777','#f472b6','#fb7185','#fff','#f9a8d4'];
-      function createFlyingHeart() {
-        if (!flying) return;
-        // Posición random horizontal
-        const left = randomBetween(10, window.innerWidth-50);
-        const size = randomBetween(24, 42);
-        const color = colorsFlying[Math.floor(Math.random()*colorsFlying.length)];
-        // SVG corazón volando
-        const heart = document.createElement('div');
-        heart.className = 'flying-heart';
-        heart.style.left = `${left}px`;
-        heart.style.bottom = `-32px`;
-        heart.style.width = `${size}px`;
-        heart.style.height = `${size}px`;
-        heart.innerHTML = `<svg viewBox="0 0 60 60" style="width:100%;height:100%;" fill="none">
-          <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"
-          fill="${color}" stroke="#fff" stroke-width="2"/>
-        </svg>`;
-        document.body.appendChild(heart);
-        flyingHearts.push(heart);
-        // Eliminar después de la animación
-        setTimeout(()=>{heart.remove();}, 2200);
-      }
-      // Lanzar corazones varias veces por segundo durante 3s
-      const freq = 60; // ms
-      const interval = setInterval(()=>createFlyingHeart(), freq);
-      setTimeout(()=>{
-        flying = false;
-        clearInterval(interval);
-        // Eliminar corazones que queden (por si acaso)
-        setTimeout(()=>{
-          flyingHearts.forEach(h=>h.remove());
-        },2400);
-      }, flyingDuration);
-    }
   </script>
 </body>
 </html>
