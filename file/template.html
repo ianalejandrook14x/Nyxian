@@ -284,7 +284,6 @@
       confessionText.innerHTML = confessionParts[confessionIndex];
       prevBtn.disabled = confessionIndex === 0;
       nextBtn.disabled = confessionIndex === confessionParts.length - 1;
-      navIndicator.textContent = `Parte ${confessionIndex + 1} de ${confessionParts.length}`;
     }
     prevBtn.onclick = () => {
       if(confessionIndex > 0) {
