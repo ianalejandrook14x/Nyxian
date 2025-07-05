@@ -57,6 +57,42 @@
       transform: scale(1.07);
       background: linear-gradient(90deg, #f472b6 0%, #db2777 100%);
     }
+    /* Corazón grande, centrado debajo del botón Info */
+    .big-heart-btn {
+      background: none;
+      border: none;
+      margin-top: 2.5rem;
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+      z-index: 2;
+      position: relative;
+      user-select: none;
+    }
+    .big-heart-svg {
+      width: 84px;
+      height: 84px;
+      transition: filter 0.3s;
+      filter: drop-shadow(0 3px 16px #db277744);
+      will-change: transform;
+      display: block;
+    }
+    .big-heart-btn:active .big-heart-svg,
+    .big-heart-btn.heart-animate .big-heart-svg {
+      animation: heartBeat 0.6s;
+    }
+    @keyframes heartBeat {
+      0%   { transform: scale(1);}
+      15%  { transform: scale(1.15);}
+      30%  { transform: scale(0.93);}
+      50%  { transform: scale(1.07);}
+      70%  { transform: scale(0.97);}
+      100% { transform: scale(1);}
+    }
+    /* Modal y otras clases igual que antes... */
     .modal-bg {
       display: none;
       position: fixed;
@@ -168,6 +204,27 @@
       letter-spacing: 0.04em;
       opacity: 0.7;
     }
+    /* Efecto corazones volando */
+    .flying-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      will-change: transform, opacity;
+      animation: flyHeart 2.2s ease-out forwards;
+    }
+    @keyframes flyHeart {
+      0% {
+        opacity: 1;
+        transform: scale(0.7) translateY(0) rotate(0deg);
+      }
+      85% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.6) translateY(-110vh) rotate(45deg);
+      }
+    }
     @media (max-width: 500px) {
       h1 { font-size: 2.2rem;}
       .modal-content { padding: 1.2rem 0.5rem;}
@@ -175,6 +232,8 @@
       .info-btn { padding: 0.8rem 1.2rem;}
       .nav-btn { font-size: 1.5rem;}
       .nav-btns { gap: 1rem;}
+      .big-heart-svg { width: 55px; height: 55px;}
+      .big-heart-btn { margin-top: 1.5rem;}
     }
   </style>
 </head>
@@ -183,6 +242,13 @@
   <div class="container">
     <h1>Valentina</h1>
     <button class="info-btn" id="infoBtn">Información</button>
+    <!-- Corazón grande debajo -->
+    <button class="big-heart-btn" id="bigHeartBtn" aria-label="Corazón">
+      <svg class="big-heart-svg" viewBox="0 0 60 60" fill="none">
+        <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"
+          fill="#db2777" stroke="#f9a8d4" stroke-width="3"/>
+      </svg>
+    </button>
   </div>
   <div class="modal-bg" id="modalBg">
     <div class="modal-content">
@@ -211,7 +277,6 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const navIndicator = document.getElementById('navIndicator');
-
     function renderConfession() {
       confessionText.innerHTML = confessionParts[confessionIndex];
       prevBtn.disabled = confessionIndex === 0;
@@ -241,8 +306,6 @@
     };
     closeBtn.onclick = () => modalBg.classList.remove('active');
     modalBg.onclick = (e) => { if (e.target === modalBg) modalBg.classList.remove('active'); };
-
-    // Navegar con flechas del teclado
     document.addEventListener('keydown', (e) => {
       if (!modalBg.classList.contains('active')) return;
       if (e.key === 'ArrowLeft') prevBtn.click();
@@ -262,7 +325,6 @@
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-
     function randomBetween(a,b) {
       return a + Math.random()*(b-a);
     }
@@ -318,6 +380,57 @@
       requestAnimationFrame(animate);
     }
     animate();
+
+    // ---- EFECTO CORAZÓN GRANDE Y CORAZONES VOLANDO ----
+    const bigHeartBtn = document.getElementById('bigHeartBtn');
+    bigHeartBtn.addEventListener('click', () => {
+      // Animación latido
+      bigHeartBtn.classList.add('heart-animate');
+      setTimeout(()=>bigHeartBtn.classList.remove('heart-animate'), 600);
+
+      // Efecto corazones volando (3 segundos)
+      triggerFlyingHearts();
+    });
+
+    function triggerFlyingHearts() {
+      let flying = true;
+      const flyingDuration = 3000;
+      const flyingHearts = [];
+      const colorsFlying = ['#db2777','#f472b6','#fb7185','#fff','#f9a8d4'];
+      function createFlyingHeart() {
+        if (!flying) return;
+        // Posición random horizontal
+        const left = randomBetween(10, window.innerWidth-50);
+        const size = randomBetween(24, 42);
+        const color = colorsFlying[Math.floor(Math.random()*colorsFlying.length)];
+        // SVG corazón volando
+        const heart = document.createElement('div');
+        heart.className = 'flying-heart';
+        heart.style.left = `${left}px`;
+        heart.style.bottom = `-32px`;
+        heart.style.width = `${size}px`;
+        heart.style.height = `${size}px`;
+        heart.innerHTML = `<svg viewBox="0 0 60 60" style="width:100%;height:100%;" fill="none">
+          <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"
+          fill="${color}" stroke="#fff" stroke-width="2"/>
+        </svg>`;
+        document.body.appendChild(heart);
+        flyingHearts.push(heart);
+        // Eliminar después de la animación
+        setTimeout(()=>{heart.remove();}, 2200);
+      }
+      // Lanzar corazones varias veces por segundo durante 3s
+      const freq = 60; // ms
+      const interval = setInterval(()=>createFlyingHeart(), freq);
+      setTimeout(()=>{
+        flying = false;
+        clearInterval(interval);
+        // Eliminar corazones que queden (por si acaso)
+        setTimeout(()=>{
+          flyingHearts.forEach(h=>h.remove());
+        },2400);
+      }, flyingDuration);
+    }
   </script>
 </body>
 </html>
