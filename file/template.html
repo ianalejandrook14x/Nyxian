@@ -5,7 +5,6 @@
   <title>Valentina</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Fondo animado con gradiente y partículas */
     body {
       margin: 0;
       min-height: 100vh;
@@ -14,8 +13,6 @@
       background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
       position: relative;
     }
-
-    /* Canvas para partículas */
     #particles-bg {
       position: fixed;
       top: 0; left: 0;
@@ -23,7 +20,6 @@
       z-index: 0;
       pointer-events: none;
     }
-
     .container {
       position: relative;
       z-index: 1;
@@ -33,7 +29,6 @@
       justify-content: center;
       min-height: 100vh;
     }
-
     h1 {
       font-size: 4rem;
       margin: 0 0 2rem 0;
@@ -42,12 +37,10 @@
       animation: popIn 1s cubic-bezier(.29,1.64,.58,.98);
       letter-spacing: 0.1em;
     }
-
     @keyframes popIn {
       from { opacity: 0; transform: scale(0.8);}
       to { opacity: 1; transform: scale(1);}
     }
-
     .info-btn {
       font-size: 1.2rem;
       color: white;
@@ -64,7 +57,6 @@
       transform: scale(1.07);
       background: linear-gradient(90deg, #f472b6 0%, #db2777 100%);
     }
-
     .modal-bg {
       display: none;
       position: fixed;
@@ -75,17 +67,14 @@
       align-items: center;
       justify-content: center;
     }
-
     .modal-bg.active {
       display: flex;
       animation: fadeIn 0.5s;
     }
-
     @keyframes fadeIn {
       from { opacity: 0;}
       to { opacity: 1;}
     }
-
     .modal-content {
       background: #fff;
       border-radius: 2rem;
@@ -96,13 +85,14 @@
       min-width: 300px;
       max-width: 90vw;
       animation: modalPop 0.5s cubic-bezier(.29,1.64,.58,.98);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
     @keyframes modalPop {
       from { opacity: 0; transform: translateY(40px) scale(0.8);}
       to { opacity: 1; transform: translateY(0) scale(1);}
     }
-
     .close-btn {
       position: absolute;
       top: 1.2rem;
@@ -117,22 +107,25 @@
     .close-btn:hover {
       color: #db2777;
     }
-
     .confession-text {
-      font-size: 2rem;
+      font-size: 1.35rem;
       font-weight: bold;
       color: #db2777;
       text-shadow: 0 2px 12px #f9a8d477;
       margin-top: 1rem;
       letter-spacing: 0.05em;
-      /* Animación de texto */
       animation: rainbow 2s linear infinite, fadeInConfess 1.2s;
       background: linear-gradient(90deg, #f472b6, #db2777, #f9a8d4, #f472b6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      min-height: 5.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: all 0.2s;
     }
-
     @keyframes rainbow {
       0% {background-position: 0%;}
       100% {background-position: 100%;}
@@ -141,12 +134,47 @@
       from {opacity: 0; transform: scale(1.15);}
       to {opacity: 1; transform: scale(1);}
     }
-
+    .nav-btns {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1.5rem;
+      gap: 2rem;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      font-size: 2.2rem;
+      color: #f472b6;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.15s;
+      user-select: none;
+      outline: none;
+    }
+    .nav-btn:disabled {
+      color: #f9a8d4;
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .nav-btn:not(:disabled):hover {
+      color: #db2777;
+      transform: scale(1.17);
+    }
+    .nav-indicator {
+      font-size: 1.1rem;
+      color: #db2777;
+      margin-top: 0.2rem;
+      letter-spacing: 0.04em;
+      opacity: 0.7;
+    }
     @media (max-width: 500px) {
       h1 { font-size: 2.2rem;}
       .modal-content { padding: 1.2rem 0.5rem;}
-      .confession-text { font-size: 1.2rem;}
+      .confession-text { font-size: 1.05rem; min-height: 6em;}
       .info-btn { padding: 0.8rem 1.2rem;}
+      .nav-btn { font-size: 1.5rem;}
+      .nav-btns { gap: 1rem;}
     }
   </style>
 </head>
@@ -159,21 +187,71 @@
   <div class="modal-bg" id="modalBg">
     <div class="modal-content">
       <button class="close-btn" id="closeBtn" title="Cerrar">&times;</button>
-      <div class="confession-text" id="confessionText">
-        Valentina yo te quiero
+      <div class="confession-text" id="confessionText"></div>
+      <div class="nav-btns">
+        <button id="prevBtn" class="nav-btn" title="Atrás" aria-label="Atrás">⬅</button>
+        <button id="nextBtn" class="nav-btn" title="Adelante" aria-label="Adelante">➡</button>
       </div>
+      <div class="nav-indicator" id="navIndicator"></div>
     </div>
   </div>
   <script>
-    // Modal logic
+    // Texto partido en partes
+    const confessionParts = [
+      `Valentina:<br><br>
+      A veces me pongo a pensar en todo lo que hemos vivido… tres años compartiendo miradas, risas, silencios y momentos que se quedaron grabados. Aquellos días en los que tu abrazo era mi refugio, cuando todo tenía sentido solo con mirarte. Nunca imaginé cuánto valor tenían hasta que todo se detuvo.`,
+      `Hubo un tiempo en que nuestros caminos se separaron. No voy a mentirte: dolió. Sentí el vacío de no tenerte cerca, de no escuchar tu voz como antes, de no sentir tu presencia en los detalles pequeños. Pero incluso en la distancia, mi corazón seguía guardando un lugar para ti.`,
+      `Y hoy, después de todo, volvemos a estar aquí. No como los mismos de antes, sino como dos personas que han crecido, aprendido y que se han vuelto a elegir. Porque eso es lo más valioso.`,
+      `No prometo que siempre será fácil, pero sí te prometo que no soltaré tu mano. Que lucharé por ti, cada día. Porque si algo aprendí en este tiempo, es que mi lugar está contigo.`,
+      `Eres y siempre serás mi lugar favorito, ese que el tiempo no pudo borrar. Gracias por estar conmigo cuándo más lo necesite.`
+    ];
+
+    let confessionIndex = 0;
+    const confessionText = document.getElementById('confessionText');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const navIndicator = document.getElementById('navIndicator');
+
+    function renderConfession() {
+      confessionText.innerHTML = confessionParts[confessionIndex];
+      prevBtn.disabled = confessionIndex === 0;
+      nextBtn.disabled = confessionIndex === confessionParts.length - 1;
+      navIndicator.textContent = `Parte ${confessionIndex + 1} de ${confessionParts.length}`;
+    }
+    prevBtn.onclick = () => {
+      if(confessionIndex > 0) {
+        confessionIndex--;
+        renderConfession();
+      }
+    };
+    nextBtn.onclick = () => {
+      if(confessionIndex < confessionParts.length - 1) {
+        confessionIndex++;
+        renderConfession();
+      }
+    };
+
+    // Modal y navegación
     const infoBtn = document.getElementById('infoBtn');
     const modalBg = document.getElementById('modalBg');
     const closeBtn = document.getElementById('closeBtn');
-    infoBtn.onclick = () => modalBg.classList.add('active');
+    infoBtn.onclick = () => {
+      modalBg.classList.add('active');
+      confessionIndex = 0;
+      renderConfession();
+    };
     closeBtn.onclick = () => modalBg.classList.remove('active');
     modalBg.onclick = (e) => { if (e.target === modalBg) modalBg.classList.remove('active'); };
 
-    // Partículas corazones animados en el fondo
+    // Navegar con flechas del teclado
+    document.addEventListener('keydown', (e) => {
+      if (!modalBg.classList.contains('active')) return;
+      if (e.key === 'ArrowLeft') prevBtn.click();
+      if (e.key === 'ArrowRight') nextBtn.click();
+      if (e.key === 'Escape') closeBtn.click();
+    });
+
+    // Partículas corazones animados en el fondo (igual que tu código original)
     const canvas = document.getElementById('particles-bg');
     const ctx = canvas.getContext('2d');
     let W = window.innerWidth, H = window.innerHeight;
@@ -189,7 +267,6 @@
     function randomBetween(a,b) {
       return a + Math.random()*(b-a);
     }
-    // Partículas corazones
     const hearts = [];
     const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
     for(let i=0;i<28;i++){
