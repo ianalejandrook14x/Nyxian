@@ -1,199 +1,206 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Valentina</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-      }
-      body {
-        background: coral;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Valentina</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      color: #db2777;
+      user-select: none;
+    }
 
-      /* Canvas para corazones voladores */
-      #flying-hearts-canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        pointer-events: none;
-      }
+    #flying-hearts-canvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      display: block;
+    }
 
-      /* Corazón principal */
-      #bigHeartBtn {
-        position: relative;
-        width: 260px;
-        height: 230px;
-        margin-top: 40px;
-        transition: transform 1s ease;
-        z-index: 10;
-        cursor: pointer; /* Cambia el cursor para que se note clickeable */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      #bigHeartBtn svg {
-        width: 100%;
-        height: 100%;
-      }
-      #heartSvg path {
-        fill: transparent;
-        stroke: #fff;
-        stroke-width: 6;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-dasharray: 400;
-        stroke-dashoffset: 400;
-        animation: drawHeart 4s ease forwards;
-      }
-      #heartSvg path:nth-child(1) {
-        animation-delay: 0.5s;
-      }
-      #heartSvg path:nth-child(2) {
-        animation-delay: 1s;
-      }
-      #heartSvg path:nth-child(3) {
-        animation-delay: 1.5s;
-      }
-      @keyframes drawHeart {
-        to {
-          stroke-dashoffset: 0;
-        }
-      }
+    .big-heart-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+      z-index: 5;
+      position: relative;
+      user-select: none;
+      margin-bottom: 15px;
+    }
+    .big-heart-svg {
+      width: 120px;
+      height: 120px;
+      transition: filter 0.3s;
+      filter: drop-shadow(0 3px 16px #db277744);
+      will-change: transform;
+      display: block;
+      fill: #db2777;
+      stroke: #f9a8d4;
+      stroke-width: 3;
+      stroke-linejoin: round;
+    }
+    .big-heart-btn:active .big-heart-svg,
+    .big-heart-btn.heart-animate .big-heart-svg {
+      animation: heartBeat 0.6s;
+    }
+    @keyframes heartBeat {
+      0%   { transform: scale(1);}
+      15%  { transform: scale(1.15);}
+      30%  { transform: scale(0.93);}
+      50%  { transform: scale(1.07);}
+      70%  { transform: scale(0.97);}
+      100% { transform: scale(1);}
+    }
 
-      /* Cuadros de texto */
-      #message,
-      #extraMessage {
-        font-family: 'Montserrat', Arial, sans-serif;
-        background: #fff;
-        color: coral;
-        border-radius: 12px;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        position: fixed;
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0;
-        white-space: pre-line; /* para respetar saltos de línea */
-      }
-      #message {
-        top: 50%;
-        left: 50%;
-        padding: 25px 35px;
-        font-size: 1.3rem;
-        z-index: 20;
-        transition: opacity 0.6s ease, transform 0.6s ease;
-        max-width: 400px;
-        text-align: center;
-      }
-      #message.show {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-      #message .close-btn {
-        position: absolute;
-        top: 8px;
-        right: 12px;
-        background: transparent;
-        border: none;
-        font-size: 1.4rem;
-        color: coral;
-        cursor: pointer;
-      }
+    #touchText {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #db2777;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      user-select: none;
+    }
+    #touchText.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-      #extraMessage {
-        top: 65%;
-        left: 50%;
-        padding: 20px 30px;
-        font-size: 1.2rem;
-        z-index: 15;
-        transition: opacity 1s ease, transform 1s ease;
-      }
-      #extraMessage.show {
-        opacity: 1;
-        transform: translate(-50%, -40%) scale(1);
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Canvas de corazones en background -->
-    <canvas id="flying-hearts-canvas"></canvas>
+    /* Modal para el mensaje */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(255, 182, 193, 0.8);
+      z-index: 10;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active {
+      display: flex;
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    .modal-content {
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px #db277777;
+      padding: 2rem 2.5rem;
+      max-width: 400px;
+      text-align: center;
+      font-size: 1.15rem;
+      line-height: 1.5;
+      color: #db2777;
+      position: relative;
+      user-select: text;
+      white-space: pre-line;
+      font-weight: 600;
+    }
+    .close-btn {
+      position: absolute;
+      top: 0.8rem;
+      right: 1rem;
+      font-size: 1.8rem;
+      color: #f472b6;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .close-btn:hover {
+      color: #db2777;
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas para corazones voladores -->
+  <canvas id="flying-hearts-canvas"></canvas>
 
-    <!-- Corazón central -->
-    <div id="bigHeartBtn" aria-label="Corazón, clic para mostrar mensaje" role="button" tabindex="0">
-      <svg
-        id="heartSvg"
-        viewBox="0 0 200 180"
-        width="100%"
-        height="100%"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M100 30 C 90 0, 40 0, 40 50 C 40 80, 100 130, 100 130" />
-        <path d="M100 30 C 110 0, 160 0, 160 50 C 160 80, 100 130, 100 130" />
-        <path d="M100 130 Q 100 140, 100 150" />
-      </svg>
+  <!-- Corazón principal -->
+  <button class="big-heart-btn" id="bigHeartBtn" aria-label="Toca el corazón para un mensaje especial">
+    <svg class="big-heart-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"/>
+    </svg>
+  </button>
+  <div id="touchText">Toca el corazón</div>
+
+  <!-- Modal del mensaje -->
+  <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalMessage">
+    <div class="modal-content">
+      <button class="close-btn" id="closeBtn" aria-label="Cerrar mensaje">&times;</button>
+      <div id="modalMessage">
+Te quiero Valentina
+
+Valentina, te lo digo con sinceridad: cuando necesites la calidad de un abrazo, algún consejo, un lugar para refugiarte, 
+acuérdate que yo siempre estaré para ti. Te daré compañía, sostendré tu mano 
+y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres mi elección 🍃 La cual no estoy arrepentido.
+      </div>
     </div>
+  </div>
 
-    <div id="message" role="dialog" aria-modal="true" aria-labelledby="messageText" tabindex="-1">
-      Te quiero Valentina
+  <script src="/js/drawEffect.js"></script>
+  <script>
+    const bigHeartBtn = document.getElementById('bigHeartBtn');
+    const touchText = document.getElementById('touchText');
+    const modalBg = document.getElementById('modalBg');
+    const closeBtn = document.getElementById('closeBtn');
 
-      Valentina, te lo digo con sinceridad: cuando necesites la calidad de un abrazo, algún consejo, un lugar para refugiarte,
-      acuérdate que yo siempre estaré para ti. Te daré compañía, sostendré tu mano
-      y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres mi elección 🍃 La cual no estoy arrepentido
-      <button
-        class="close-btn"
-        aria-label="Cerrar mensaje"
-        onclick="document.getElementById('message').classList.remove('show')"
-      >
-        x
-      </button>
-    </div>
-    <div id="extraMessage">Toca el corazón</div>
+    // Mostrar texto "Toca el corazón" después de un delay (simulando animación terminada)
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        touchText.classList.add('show');
+      }, 4500); // 4.5s como duración de animación inicial
+    });
 
-    <!-- Script efecto de corazones -->
-    <script src="/js/drawEffect.js"></script>
+    // Al hacer click en el corazón
+    bigHeartBtn.addEventListener('click', () => {
+      // Animar latido
+      bigHeartBtn.classList.add('heart-animate');
+      setTimeout(() => bigHeartBtn.classList.remove('heart-animate'), 600);
 
-    <script>
-      const bigHeartBtn = document.getElementById('bigHeartBtn');
-      const paths = document.querySelectorAll('#heartSvg path');
-      let ready = false;
+      // Iniciar efecto de corazones voladores
+      if (window.startFlyingHearts) window.startFlyingHearts();
 
-      // Cuando termina de dibujarse el corazón
-      paths[paths.length - 1].addEventListener('animationend', () => {
-        ready = true;
-        bigHeartBtn.style.transform = 'translateY(-40px)';
-        document.getElementById('extraMessage').classList.add('show');
-      });
+      // Mostrar modal con mensaje
+      modalBg.classList.add('active');
+    });
 
-      // Mostrar mensaje al hacer clic en el corazón cuando esté listo
-      bigHeartBtn.addEventListener('click', () => {
-        if (ready) {
-          document.getElementById('message').classList.add('show');
-        }
-      });
-
-      // Para accesibilidad: que se pueda abrir con Enter o espacio también
-      bigHeartBtn.addEventListener('keydown', (e) => {
-        if (ready && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault();
-          document.getElementById('message').classList.add('show');
-        }
-      });
-    </script>
-  </body>
+    // Cerrar modal
+    closeBtn.addEventListener('click', () => {
+      modalBg.classList.remove('active');
+    });
+    // Cerrar modal si clic fuera contenido
+    modalBg.addEventListener('click', (e) => {
+      if (e.target === modalBg) {
+        modalBg.classList.remove('active');
+      }
+    });
+    // Cerrar modal con Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalBg.classList.contains('active')) {
+        modalBg.classList.remove('active');
+      }
+    });
+  </script>
+</body>
 </html>
