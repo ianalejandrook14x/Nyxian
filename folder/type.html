@@ -10,7 +10,6 @@
       min-height: 100vh;
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
-      /* Tu fondo degradado original */
       background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
       display: flex;
       justify-content: center;
@@ -21,23 +20,21 @@
       user-select: none;
     }
 
-    /* Nuevo canvas para los corazones de fondo automáticos */
     #background-hearts-canvas {
       position: fixed;
       left: 0; top: 0;
       width: 100vw; height: 100vh;
-      pointer-events: none; /* Crucial para que no bloquee los clics */
-      z-index: 0; /* Asegura que esté en el fondo, detrás de todo */
+      pointer-events: none;
+      z-index: 0;
       display: block;
     }
 
-    /* El canvas original para los corazones que aparecen al hacer clic en el corazón grande */
     #flying-hearts-canvas {
       position: fixed;
       left: 0; top: 0;
       width: 100vw; height: 100vh;
       pointer-events: none;
-      z-index: 1; /* Estará por encima del background, pero debajo del contenido principal */
+      z-index: 1;
       display: block;
     }
 
@@ -50,11 +47,48 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.15s;
-      z-index: 5; /* Asegura que el botón esté por encima de los canvases */
+      z-index: 5;
       position: relative;
       user-select: none;
       margin-bottom: 15px;
+      /* Ocultar inicialmente para el efecto de aparición */
+      opacity: 0;
+      transform: scale(0.5); /* Más pequeño al inicio */
+      /* Añadimos un pequeño margen negativo para el efecto flotante */
+      margin-top: 20px; /* Espacio para que el corazón suba un poco */
     }
+
+    /* Animación de aparición para el corazón grande */
+    .big-heart-btn.appear {
+      animation: heartAppear 1s forwards cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes heartAppear {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(50px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0px);
+      }
+    }
+
+    /* Animación de flotación para el corazón grande */
+    .big-heart-btn.float {
+      animation: heartFloat 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes heartFloat {
+      0% {
+        transform: translateY(0px);
+      }
+      100% {
+        transform: translateY(-15px); /* Se mueve 15px hacia arriba */
+      }
+    }
+
+
     .big-heart-svg {
       width: 120px;
       height: 120px;
@@ -85,6 +119,7 @@
       font-weight: 600;
       color: #db2777;
       opacity: 0;
+      /* Empieza más abajo para que "suba" al aparecer */
       transform: translateY(20px);
       transition: opacity 0.6s ease, transform 0.6s ease;
       user-select: none;
@@ -173,10 +208,9 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
 
   <script>
     // ==================== LÓGICA PARA LOS CORAZONES DE FONDO AUTOMÁTICOS ===========================
-    // Extraído de tu segundo ejemplo
     (function() {
       const canvas = document.getElementById('background-hearts-canvas');
-      if(!canvas) return; // Asegúrate de que el canvas exista
+      if(!canvas) return;
       const ctx = canvas.getContext('2d');
       let W = window.innerWidth, H = window.innerHeight;
 
@@ -195,8 +229,6 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
 
       const hearts = [];
       const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
-      
-      // Número de corazones en el fondo (ajusta este valor si quieres más o menos)
       const numberOfBackgroundHearts = 8; 
 
       for(let i = 0; i < numberOfBackgroundHearts; i++){
@@ -224,9 +256,9 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
         ctx.bezierCurveTo(12, -12, 0, -8, 0, 0);
         ctx.closePath();
         ctx.fillStyle = color;
-        ctx.globalAlpha = 0.65; /* Opacidad para los corazones de fondo */
+        ctx.globalAlpha = 0.65;
         ctx.shadowColor = color;
-        ctx.shadowBlur = 8; /* Efecto de brillo sutil */
+        ctx.shadowBlur = 8;
         ctx.fill();
         ctx.globalAlpha = 1;
         ctx.restore();
@@ -251,7 +283,6 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
         requestAnimationFrame(animateBackgroundHearts);
       }
 
-      // Iniciar la animación de los corazones de fondo automáticamente
       animateBackgroundHearts();
     })();
 
@@ -261,21 +292,32 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
     const modalBg = document.getElementById('modalBg');
     const closeBtn = document.getElementById('closeBtn');
 
-    // Mostrar texto "Toca el corazón" después de un delay
+    // Controlar la secuencia de animaciones al cargar la página
     window.addEventListener('load', () => {
+      // 1. Efecto de aparición del corazón grande
+      bigHeartBtn.classList.add('appear');
+
+      // 2. Después de la aparición (1s), iniciar flotación del corazón y mostrar el texto "Toca el corazón"
       setTimeout(() => {
-        touchText.classList.add('show');
-      }, 4500);
+        bigHeartBtn.classList.add('float'); // Inicia la animación de flotación
+        touchText.classList.add('show');    // Muestra el texto
+      }, 1000); // Coincide con la duración de la animación 'heartAppear'
     });
 
     // Al hacer click en el corazón grande
     bigHeartBtn.addEventListener('click', () => {
+      // Remover la animación de flotación para que el latido sea más notorio
+      bigHeartBtn.classList.remove('float'); 
+      
       // Animar latido
       bigHeartBtn.classList.add('heart-animate');
       setTimeout(() => bigHeartBtn.classList.remove('heart-animate'), 600);
 
       // Iniciar efecto de corazones voladores (este usa flying-hearts-canvas)
       if (window.startFlyingHearts) window.startFlyingHearts();
+
+      // Ocultar el texto "Toca el corazón" al hacer clic
+      touchText.classList.remove('show');
 
       // Mostrar modal con mensaje
       modalBg.classList.add('active');
@@ -284,17 +326,31 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
     // Cerrar modal
     closeBtn.addEventListener('click', () => {
       modalBg.classList.remove('active');
+      // Volver a mostrar el texto "Toca el corazón" si el modal se cierra
+      // y el corazón grande no está latiendo (para evitar un parpadeo si se cierra muy rápido)
+      if (!bigHeartBtn.classList.contains('heart-animate')) {
+          touchText.classList.add('show');
+          bigHeartBtn.classList.add('float'); // Reactivar la flotación
+      }
     });
     // Cerrar modal si clic fuera contenido
     modalBg.addEventListener('click', (e) => {
       if (e.target === modalBg) {
         modalBg.classList.remove('active');
+        if (!bigHeartBtn.classList.contains('heart-animate')) {
+            touchText.classList.add('show');
+            bigHeartBtn.classList.add('float');
+        }
       }
     });
     // Cerrar modal con Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modalBg.classList.contains('active')) {
         modalBg.classList.remove('active');
+        if (!bigHeartBtn.classList.contains('heart-animate')) {
+            touchText.classList.add('show');
+            bigHeartBtn.classList.add('float');
+        }
       }
     });
   </script>
