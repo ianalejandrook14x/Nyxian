@@ -10,6 +10,7 @@
       min-height: 100vh;
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
+      /* Tu fondo degradado original */
       background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
       display: flex;
       justify-content: center;
@@ -20,12 +21,23 @@
       user-select: none;
     }
 
+    /* Nuevo canvas para los corazones de fondo automáticos */
+    #background-hearts-canvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none; /* Crucial para que no bloquee los clics */
+      z-index: 0; /* Asegura que esté en el fondo, detrás de todo */
+      display: block;
+    }
+
+    /* El canvas original para los corazones que aparecen al hacer clic en el corazón grande */
     #flying-hearts-canvas {
       position: fixed;
       left: 0; top: 0;
       width: 100vw; height: 100vh;
       pointer-events: none;
-      z-index: 1;
+      z-index: 1; /* Estará por encima del background, pero debajo del contenido principal */
       display: block;
     }
 
@@ -38,7 +50,7 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.15s;
-      z-index: 5;
+      z-index: 5; /* Asegura que el botón esté por encima de los canvases */
       position: relative;
       user-select: none;
       margin-bottom: 15px;
@@ -133,6 +145,8 @@
   </style>
 </head>
 <body>
+  <canvas id="background-hearts-canvas"></canvas>
+
   <canvas id="flying-hearts-canvas"></canvas>
 
   <button class="big-heart-btn" id="bigHeartBtn" aria-label="Toca el corazón para un mensaje especial">
@@ -156,26 +170,111 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
   </div>
 
   <script src="/js/drawEffect.js"></script>
+
   <script>
+    // ==================== LÓGICA PARA LOS CORAZONES DE FONDO AUTOMÁTICOS ===========================
+    // Extraído de tu segundo ejemplo
+    (function() {
+      const canvas = document.getElementById('background-hearts-canvas');
+      if(!canvas) return; // Asegúrate de que el canvas exista
+      const ctx = canvas.getContext('2d');
+      let W = window.innerWidth, H = window.innerHeight;
+
+      function resizeCanvas() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      function randomBetween(a,b) {
+        return a + Math.random()*(b-a);
+      }
+
+      const hearts = [];
+      const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
+      
+      // Número de corazones en el fondo (ajusta este valor si quieres más o menos)
+      const numberOfBackgroundHearts = 8; 
+
+      for(let i = 0; i < numberOfBackgroundHearts; i++){
+        hearts.push({
+          x: randomBetween(0, W),
+          y: randomBetween(0, H),
+          size: randomBetween(16,32),
+          color: colors[Math.floor(Math.random()*colors.length)],
+          speed: randomBetween(0.4,1.3),
+          dx: randomBetween(-0.3,0.3),
+          phase: Math.random()*Math.PI*2
+        });
+      }
+
+      function drawHeart(x, y, s, color, phase) {
+        ctx.save();
+        ctx.translate(x, y + Math.sin(performance.now()/700 + phase)*4);
+        ctx.rotate(Math.sin(performance.now()/500 + phase)*0.04);
+        ctx.scale(s/25, s/25);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(0, -8, -12, -12, -12, 0);
+        ctx.bezierCurveTo(-12, 10, 0, 14, 0, 22);
+        ctx.bezierCurveTo(0, 14, 12, 10, 12, 0);
+        ctx.bezierCurveTo(12, -12, 0, -8, 0, 0);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.65; /* Opacidad para los corazones de fondo */
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 8; /* Efecto de brillo sutil */
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      }
+
+      function animateBackgroundHearts() {
+        ctx.clearRect(0,0,W,H);
+        for(let h of hearts) {
+          drawHeart(h.x, h.y, h.size, h.color, h.phase);
+          h.y -= h.speed;
+          h.x += h.dx;
+          if(h.y < -30 || h.x < -30 || h.x > W+30){
+            h.x = randomBetween(0,W);
+            h.y = H + randomBetween(10,80);
+            h.size = randomBetween(16,32);
+            h.color = colors[Math.floor(Math.random()*colors.length)];
+            h.speed = randomBetween(0.4,1.3);
+            h.dx = randomBetween(-0.3,0.3);
+            h.phase = Math.random()*Math.PI*2;
+          }
+        }
+        requestAnimationFrame(animateBackgroundHearts);
+      }
+
+      // Iniciar la animación de los corazones de fondo automáticamente
+      animateBackgroundHearts();
+    })();
+
+    // ==================== LÓGICA PRINCIPAL DE TU PÁGINA (corazón grande, modal) ===========================
     const bigHeartBtn = document.getElementById('bigHeartBtn');
     const touchText = document.getElementById('touchText');
     const modalBg = document.getElementById('modalBg');
     const closeBtn = document.getElementById('closeBtn');
 
-    // Mostrar texto "Toca el corazón" después de un delay (simulando animación terminada)
+    // Mostrar texto "Toca el corazón" después de un delay
     window.addEventListener('load', () => {
       setTimeout(() => {
         touchText.classList.add('show');
-      }, 4500); // 4.5s como duración de animación inicial
+      }, 4500);
     });
 
-    // Al hacer click en el corazón
+    // Al hacer click en el corazón grande
     bigHeartBtn.addEventListener('click', () => {
       // Animar latido
       bigHeartBtn.classList.add('heart-animate');
       setTimeout(() => bigHeartBtn.classList.remove('heart-animate'), 600);
 
-      // Iniciar efecto de corazones voladores (este ya estaba aquí)
+      // Iniciar efecto de corazones voladores (este usa flying-hearts-canvas)
       if (window.startFlyingHearts) window.startFlyingHearts();
 
       // Mostrar modal con mensaje
@@ -196,13 +295,6 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modalBg.classList.contains('active')) {
         modalBg.classList.remove('active');
-      }
-    });
-
-    // Iniciar los corazones de fondo automáticamente al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.startFlyingHearts) {
-        window.startFlyingHearts();
       }
     });
   </script>
