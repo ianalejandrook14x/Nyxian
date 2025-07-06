@@ -51,11 +51,14 @@
       position: relative;
       user-select: none;
       margin-bottom: 15px;
-      /* Ocultar inicialmente para el efecto de aparición */
+      
+      /* Estado inicial oculto */
       opacity: 0;
-      transform: scale(0.5); /* Más pequeño al inicio */
-      /* Añadimos un pequeño margen negativo para el efecto flotante */
-      margin-top: 20px; /* Espacio para que el corazón suba un poco */
+      transform: scale(0.5); /* Más pequeño al inicio para el efecto de aparición */
+      
+      /* Ajuste para la posición inicial, si es necesario, antes de las animaciones */
+      /* Esto ayudará a que el corazón suba un poco desde una posición inferior */
+      transform-origin: center bottom;
     }
 
     /* Animación de aparición para el corazón grande */
@@ -66,17 +69,19 @@
     @keyframes heartAppear {
       0% {
         opacity: 0;
-        transform: scale(0.5) translateY(50px);
+        transform: scale(0.5) translateY(50px); /* Empieza más abajo y pequeño */
       }
       100% {
         opacity: 1;
-        transform: scale(1) translateY(0px);
+        transform: scale(1) translateY(0px); /* Termina en su tamaño normal y posición original */
       }
     }
 
     /* Animación de flotación para el corazón grande */
     .big-heart-btn.float {
-      animation: heartFloat 2s ease-in-out infinite alternate;
+      /* La animación de flotación se aplicará después de 'appear' */
+      /* El transform en keyframes ahora solo maneja el translateY */
+      animation: heartFloat 2s ease-in-out infinite alternate forwards;
     }
 
     @keyframes heartFloat {
@@ -88,19 +93,6 @@
       }
     }
 
-
-    .big-heart-svg {
-      width: 120px;
-      height: 120px;
-      transition: filter 0.3s;
-      filter: drop-shadow(0 3px 16px #db277744);
-      will-change: transform;
-      display: block;
-      fill: #db2777;
-      stroke: #f9a8d4;
-      stroke-width: 3;
-      stroke-linejoin: round;
-    }
     .big-heart-btn:active .big-heart-svg,
     .big-heart-btn.heart-animate .big-heart-svg {
       animation: heartBeat 0.6s;
@@ -119,8 +111,7 @@
       font-weight: 600;
       color: #db2777;
       opacity: 0;
-      /* Empieza más abajo para que "suba" al aparecer */
-      transform: translateY(20px);
+      transform: translateY(20px); /* Empieza más abajo para el efecto de "subir" */
       transition: opacity 0.6s ease, transform 0.6s ease;
       user-select: none;
     }
@@ -299,7 +290,8 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
 
       // 2. Después de la aparición (1s), iniciar flotación del corazón y mostrar el texto "Toca el corazón"
       setTimeout(() => {
-        bigHeartBtn.classList.add('float'); // Inicia la animación de flotación
+        // Asegúrate de que 'float' se aplique y mantenga el estado final de 'appear'
+        bigHeartBtn.classList.add('float'); 
         touchText.classList.add('show');    // Muestra el texto
       }, 1000); // Coincide con la duración de la animación 'heartAppear'
     });
@@ -326,8 +318,8 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
     // Cerrar modal
     closeBtn.addEventListener('click', () => {
       modalBg.classList.remove('active');
-      // Volver a mostrar el texto "Toca el corazón" si el modal se cierra
-      // y el corazón grande no está latiendo (para evitar un parpadeo si se cierra muy rápido)
+      // Volver a mostrar el texto "Toca el corazón" y la flotación
+      // si el modal se cierra y el corazón grande no está latiendo
       if (!bigHeartBtn.classList.contains('heart-animate')) {
           touchText.classList.add('show');
           bigHeartBtn.classList.add('float'); // Reactivar la flotación
