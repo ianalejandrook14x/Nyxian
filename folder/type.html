@@ -133,10 +133,8 @@
   </style>
 </head>
 <body>
-  <!-- Canvas para corazones voladores -->
   <canvas id="flying-hearts-canvas"></canvas>
 
-  <!-- Corazón principal -->
   <button class="big-heart-btn" id="bigHeartBtn" aria-label="Toca el corazón para un mensaje especial">
     <svg class="big-heart-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"/>
@@ -144,7 +142,6 @@
   </button>
   <div id="touchText">Toca el corazón</div>
 
-  <!-- Modal del mensaje -->
   <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalMessage">
     <div class="modal-content">
       <button class="close-btn" id="closeBtn" aria-label="Cerrar mensaje">&times;</button>
@@ -178,7 +175,7 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
       bigHeartBtn.classList.add('heart-animate');
       setTimeout(() => bigHeartBtn.classList.remove('heart-animate'), 600);
 
-      // Iniciar efecto de corazones voladores
+      // Iniciar efecto de corazones voladores (este ya estaba aquí)
       if (window.startFlyingHearts) window.startFlyingHearts();
 
       // Mostrar modal con mensaje
@@ -199,6 +196,13 @@ y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modalBg.classList.contains('active')) {
         modalBg.classList.remove('active');
+      }
+    });
+
+    // Iniciar los corazones de fondo automáticamente al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.startFlyingHearts) {
+        window.startFlyingHearts();
       }
     });
   </script>
