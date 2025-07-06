@@ -2,284 +2,147 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Valentina - Corazón animado</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valentina</title>
   <style>
-    body, html {
-      margin: 0; padding: 0; height: 100%;
-      background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      font-family: 'Segoe UI', sans-serif;
-      user-select: none;
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%; width: 100%;
       overflow: hidden;
-      color: #db2777;
+      background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-
     canvas#heartCanvas {
-      position: fixed;
+      position: absolute;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      width: 100vw;
+      height: 100vh;
       z-index: 1;
-      pointer-events: none;
-      background: transparent;
     }
-
-    button#bigHeartBtn {
+    #bigHeartBtn {
       position: relative;
       z-index: 5;
-      border: none;
       background: none;
-      cursor: pointer;
-      outline: none;
-      display: none; /* oculto al principio */
+      border: none;
+      display: none;
     }
-
-    svg.big-heart-svg {
-      width: 150px;
-      height: 150px;
+    .big-heart-svg {
+      width: 100px;
+      height: 100px;
       fill: #db2777;
       stroke: #f9a8d4;
       stroke-width: 3;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 3px 16px #db277744);
-      transform-origin: center;
     }
-
-    button#bigHeartBtn.heart-animate svg {
-      animation: heartBeat 0.6s;
-    }
-    @keyframes heartBeat {
-      0%   { transform: scale(1);}
-      15%  { transform: scale(1.15);}
-      30%  { transform: scale(0.93);}
-      50%  { transform: scale(1.07);}
-      70%  { transform: scale(0.97);}
-      100% { transform: scale(1);}
-    }
-
     #touchText {
-      margin-top: 15px;
+      margin-top: 20px;
       font-size: 1.5rem;
+      color: #db2777;
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      user-select: none;
+      transition: opacity 0.5s ease;
       z-index: 5;
     }
     #touchText.show {
       opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Modal */
-    .modal-bg {
-      display: none;
-      position: fixed;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(255, 182, 193, 0.8);
-      z-index: 10;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-bg.active {
-      display: flex;
-      animation: fadeIn 0.5s;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-    .modal-content {
-      background: white;
-      border-radius: 1.5rem;
-      box-shadow: 0 8px 32px #db277777;
-      padding: 2rem 2.5rem;
-      max-width: 400px;
-      text-align: center;
-      font-size: 1.15rem;
-      line-height: 1.5;
-      color: #db2777;
-      position: relative;
-      user-select: text;
-      white-space: pre-line;
-      font-weight: 600;
-    }
-    .close-btn {
-      position: absolute;
-      top: 0.8rem;
-      right: 1rem;
-      font-size: 1.8rem;
-      color: #f472b6;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.3s;
-    }
-    .close-btn:hover {
-      color: #db2777;
     }
   </style>
 </head>
 <body>
 
-  <canvas id="heartCanvas"></canvas>
+<canvas id="heartCanvas"></canvas>
 
-  <button id="bigHeartBtn" aria-label="Toca el corazón para un mensaje especial">
-    <svg class="big-heart-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"/>
-    </svg>
-  </button>
+<button id="bigHeartBtn">
+  <svg class="big-heart-svg" viewBox="0 0 60 60">
+    <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"/>
+  </svg>
+</button>
 
-  <div id="touchText">Toca el corazón</div>
+<div id="touchText">Toca el corazón</div>
 
-  <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalMessage">
-    <div class="modal-content">
-      <button class="close-btn" id="closeBtn" aria-label="Cerrar mensaje">&times;</button>
-      <div id="modalMessage">
-Te quiero Valentina
+<script>
+  const canvas = document.getElementById('heartCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-Valentina, te lo digo con sinceridad: cuando necesites la calidad de un abrazo, algún consejo, un lugar para refugiarte, 
-acuérdate que yo siempre estaré para ti. Te daré compañía, sostendré tu mano 
-y haré lo imposible que sea posible, solo por ti, porque te quiero, porque eres mi elección 🍃 La cual no estoy arrepentido.
-      </div>
-    </div>
-  </div>
+  function heartShape(t) {
+    return {
+      x: 16 * Math.pow(Math.sin(t), 3),
+      y: 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t)
+    };
+  }
 
-  <!-- Aquí puedes cargar tu efecto de corazones voladores externo -->
-  <script src="/js/drawEffect.js"></script>
+  const W = canvas.width;
+  const H = canvas.height;
 
-  <script>
-    // === PARTICULAS QUE SE MUEVEN HACIA FORMA CORAZÓN ===
-    const canvas = document.getElementById('heartCanvas');
-    const ctx = canvas.getContext('2d');
-    let W, H;
-    function resize() {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W;
-      canvas.height = H;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    // Define la forma del corazón con puntos (en un sistema 0-1 que escalaremos)
-    function heartShape(t) {
-      // Paramétrico corazón clásico:
-      return {
-        x: 16 * Math.pow(Math.sin(t),3),
-        y: 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t)
-      };
-    }
-
-    // Escala y traslada la forma del corazón al centro pantalla
-    function getHeartPoints(numPoints=200) {
-      const points = [];
-      for(let i=0; i<numPoints; i++) {
-        let t = (Math.PI*2) * (i/numPoints);
-        let p = heartShape(t);
-        // escalar y centrar
-        points.push({
-          x: W/2 + p.x*15,
-          y: H/2 - p.y*15
-        });
-      }
-      return points;
-    }
-
-    const heartPoints = getHeartPoints(300);
-
-    // Cada partícula comienza alejada, y se mueve hacia su punto destino
-    class Particle {
-      constructor(destX, destY) {
-        this.x = Math.random()*W;
-        this.y = Math.random()*H;
-        this.destX = destX;
-        this.destY = destY;
-        this.vx = 0;
-        this.vy = 0;
-        this.acceleration = 0.1 + Math.random()*0.05;
-        this.size = 2 + Math.random()*2;
-        this.color = '#db2777';
-      }
-      update() {
-        let dx = this.destX - this.x;
-        let dy = this.destY - this.y;
-        this.vx += dx * this.acceleration;
-        this.vy += dy * this.acceleration;
-
-        // frena para no sobrepasar
-        this.vx *= 0.8;
-        this.vy *= 0.8;
-
-        this.x += this.vx;
-        this.y += this.vy;
-      }
-      draw(ctx) {
-        ctx.beginPath();
-        ctx.fillStyle = this.color;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 8;
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-      distanceToDest() {
-        return Math.hypot(this.destX - this.x, this.destY - this.y);
-      }
-    }
-
-    const particles = heartPoints.map(p => new Particle(p.x, p.y));
-    let assembled = false;
-
-    function animate() {
-      ctx.clearRect(0, 0, W, H);
-      let allClose = true;
-      for(let p of particles) {
-        p.update();
-        p.draw(ctx);
-        if(p.distanceToDest() > 1.5) allClose = false;
-      }
-      if(!assembled && allClose) {
-        assembled = true;
-        onAssembled();
-      }
-      if(!assembled) {
-        requestAnimationFrame(animate);
-      }
-    }
-
-    function onAssembled() {
-      // Al estar formado el corazón, muestra el botón con SVG y el texto
-      bigHeartBtn.style.display = 'block';
-      touchText.classList.add('show');
-      // Borra el canvas con partículas para no tapar
-      ctx.clearRect(0, 0, W, H);
-    }
-
-    animate();
-
-    // Botón corazón ya formado
-    const bigHeartBtn = document.getElementById('bigHeartBtn');
-    const touchText = document.getElementById('touchText');
-    const modalBg = document.getElementById('modalBg');
-    const closeBtn = document.getElementById('closeBtn');
-
-    bigHeartBtn.addEventListener('click', () => {
-      bigHeartBtn.classList.add('heart-animate');
-      setTimeout(() => bigHeartBtn.classList.remove('heart-animate'), 600);
-
-      // Efectos corazones voladores (usa tu función de drawEffect.js)
-      if(window.startFlyingHearts) window.startFlyingHearts();
-
-      // Mostrar mensaje con 3 segundos de delay
-      setTimeout(() => {
-        modalBg.classList.add('active');
-      }, 3000);
+  const heartPoints = [];
+  const N = 300;
+  for (let i = 0; i < N; i++) {
+    const t = Math.PI * 2 * (i / N);
+    const p = heartShape(t);
+    heartPoints.push({
+      x: W / 2 + p.x * 15,
+      y: H / 2 - p.y * 15
     });
+  }
 
-    closeBtn.addEventListener('click', () => {
-      modalBg.classList.remove('active');
+  class Particle {
+    constructor(destX, destY) {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.destX = destX;
+      this.destY = destY;
+      this.vx = 0;
+      this.vy = 0;
+      this.acc = 0.07 + Math.random() * 0.03;
+      this.size = 2 + Math.random();
+    }
+    update() {
+      const dx = this.destX - this.x;
+      const dy = this.destY - this.y;
+      this.vx += dx * this.acc;
+      this.vy += dy * this.acc;
+      this.vx *= 0.8;
+      this.vy *= 0.8;
+      this.x += this.vx;
+      this.y += this.vy;
+    }
+    draw(ctx) {
+      ctx.beginPath();
+      ctx.fillStyle = '#db2777';
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    isClose() {
+      return Math.hypot(this.destX - this.x, this.destY - this.y) < 2;
+    }
+  }
+
+  const particles = heartPoints.map(p => new Particle(p.x, p.y));
+  const bigHeartBtn = document.getElementById('bigHeartBtn');
+  const touchText = document.getElementById('touchText');
+
+  let assembled = false;
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    let allClose = true;
+    for (let p of particles) {
+      p.update();
+      p.draw(ctx);
+      if (!p.isClose()) allClose = false;
+    }
+    if (!assembled && allClose) {
+      assembled = true;
+      setTimeout(() => {
+        bigHeartBtn.style.display = 'block';
+        touchText.classList.add('show');
+      }, 300);
+    }
+    if (!assembled) requestAnimationFrame(animate);
+  }
+  animate();
+</script>
+</body>
+</html>
