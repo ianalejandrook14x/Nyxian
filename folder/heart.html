@@ -3,398 +3,278 @@
 <head>
   <meta charset="UTF-8">
   <title>Valentina</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      min-height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
-      background: linear-gradient(120deg, #ffb6c1 0%, #ffe4e1 100%);
-      position: relative;
+      padding: 0;
     }
-    #particles-bg {
+
+    html, body {
+      height: 100%;
+      background: linear-gradient(45deg, #111 0%, #444 50%, #000 100%);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      font-family: cursive;
+      overflow: hidden;
+      position: relative;
+      color: white;
+    }
+
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    canvas {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: 0;
       pointer-events: none;
     }
-    #flying-hearts-canvas {
-      position: fixed;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      pointer-events: none;
-      z-index: 2;
-      display: block;
-    }
-    .container {
+
+    .contenido-central {
       position: relative;
-      z-index: 1;
+      z-index: 2;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-    }
-    h1 {
-      font-size: 4rem;
-      margin: 0 0 2rem 0;
-      color: #db2777;
-      text-shadow: 0 2px 16px #fff8, 0 6px 30px #db277766;
-      animation: popIn 1s cubic-bezier(.29,1.64,.58,.98);
-      letter-spacing: 0.1em;
-    }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.8);}
-      to { opacity: 1; transform: scale(1);}
-    }
-    .info-btn {
-      font-size: 1.2rem;
-      color: white;
-      background: linear-gradient(90deg, #f472b6 30%, #f9a8d4 100%);
-      border: none;
-      border-radius: 2rem;
-      padding: 1rem 2.5rem;
-      cursor: pointer;
-      box-shadow: 0 2px 12px #db277755;
-      transition: transform 0.15s, background 0.5s;
-      margin-top: 1rem;
-    }
-    .info-btn:hover {
-      transform: scale(1.07);
-      background: linear-gradient(90deg, #f472b6 0%, #db2777 100%);
-    }
-    .big-heart-btn {
-      background: none;
-      border: none;
-      margin-top: 2.5rem;
-      cursor: pointer;
-      outline: none;
-      display: flex;
       align-items: center;
-      justify-content: center;
-      transition: transform 0.15s;
-      z-index: 2;
-      position: relative;
-      user-select: none;
+      text-align: center;
     }
-    .big-heart-svg {
-      width: 84px;
-      height: 84px;
-      transition: filter 0.3s;
-      filter: drop-shadow(0 3px 16px #db277744);
-      will-change: transform;
-      display: block;
+
+    .contenido-central h1 {
+      font-size: 3.5em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+      animation: pulseText 2s infinite alternate;
+      color: #bbb;
     }
-    .big-heart-btn:active .big-heart-svg,
-    .big-heart-btn.heart-animate .big-heart-svg {
-      animation: heartBeat 0.6s;
+
+    @keyframes pulseText {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.03); }
     }
-    @keyframes heartBeat {
-      0%   { transform: scale(1);}
-      15%  { transform: scale(1.15);}
-      30%  { transform: scale(0.93);}
-      50%  { transform: scale(1.07);}
-      70%  { transform: scale(0.97);}
-      100% { transform: scale(1);}
+
+    .carta {
+      background: #1a1a1a;
+      color: #ccc;
+      padding: 20px 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      border: 2px solid #555;
+      font-size: 1.1em;
     }
-    .modal-bg {
+
+    .carta:hover {
+      transform: scale(1.08);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+      border-color: #888;
+    }
+
+    .cuadro-mensaje {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: #111;
+      color: #ccc;
+      font-size: 22px;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
       display: none;
-      position: fixed;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(255, 182, 193, 0.75);
-      z-index: 10;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-bg.active {
-      display: flex;
-      animation: fadeIn 0.5s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0;}
-      to { opacity: 1;}
-    }
-    .modal-content {
-      background: #fff;
-      border-radius: 2rem;
-      box-shadow: 0 8px 32px #db277777;
-      padding: 2.5rem 3rem;
+      z-index: 999;
+      width: 90%;
+      max-width: 700px; /* MÁS ANCHO */
+      max-height: 80vh;
+      overflow-y: auto;
       text-align: center;
-      position: relative;
-      min-width: 300px;
-      max-width: 90vw;
-      animation: modalPop 0.5s cubic-bezier(.29,1.64,.58,.98);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      opacity: 0;
+      transition: all 0.4s ease-out;
     }
-    @keyframes modalPop {
-      from { opacity: 0; transform: translateY(40px) scale(0.8);}
-      to { opacity: 1; transform: translateY(0) scale(1);}
-    }
-    .close-btn {
-      position: absolute;
-      top: 1.2rem;
-      right: 1.7rem;
-      font-size: 2rem;
-      color: #f472b6;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.3s;
-    }
-    .close-btn:hover {
-      color: #db2777;
-    }
-    .confession-text {
-      font-size: 1.35rem;
-      font-weight: bold;
-      color: #db2777;
-      text-shadow: 0 2px 12px #f9a8d477;
-      margin-top: 1rem;
-      letter-spacing: 0.05em;
-      animation: rainbow 2s linear infinite, fadeInConfess 1.2s;
-      background: linear-gradient(90deg, #f472b6, #db2777, #f9a8d4, #f472b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      min-height: 5.5em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      transition: all 0.2s;
-    }
-    @keyframes rainbow {
-      0% {background-position: 0%;}
-      100% {background-position: 100%;}
-    }
-    @keyframes fadeInConfess {
-      from {opacity: 0; transform: scale(1.15);}
-      to {opacity: 1; transform: scale(1);}
-    }
-    .nav-btns {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 1.5rem;
-      gap: 2rem;
-    }
-    .nav-btn {
-      background: none;
-      border: none;
-      font-size: 2.2rem;
-      color: #f472b6;
-      cursor: pointer;
-      transition: color 0.2s, transform 0.15s;
-      user-select: none;
-      outline: none;
-    }
-    .nav-btn:disabled {
-      color: #f9a8d4;
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-    .nav-btn:not(:disabled):hover {
-      color: #db2777;
-      transform: scale(1.17);
-    }
-    .nav-indicator {
-      font-size: 1.1rem;
-      color: #db2777;
-      margin-top: 0.2rem;
-      letter-spacing: 0.04em;
-      opacity: 0.7;
-    }
-    /* --- Estrella click effect --- */
-    .click-effect {
-      position: fixed;
-      width: 38px;
-      height: 38px;
-      pointer-events: none;
+
+    .cuadro-mensaje.mostrar {
       transform: translate(-50%, -50%) scale(1);
-      transition: opacity 0.25s, transform 0.5s cubic-bezier(.2,1.4,.6,1.1);
       opacity: 1;
-      z-index: 10000;
-      filter: invert(1) drop-shadow(0 0 8px #fff) brightness(1.6);
-      animation: star-pop 0.5s forwards;
     }
-    @keyframes star-pop {
-      0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.8;}
-      70% { transform: translate(-50%, -50%) scale(1.2); opacity: 1;}
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 0;}
+
+    .cuadro-mensaje .cerrar {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
     }
-    @media (max-width: 500px) {
-      h1 { font-size: 2.2rem;}
-      .modal-content { padding: 1.2rem 0.5rem;}
-      .confession-text { font-size: 1.05rem; min-height: 6em;}
-      .info-btn { padding: 0.8rem 1.2rem;}
-      .nav-btn { font-size: 1.5rem;}
-      .nav-btns { gap: 1rem;}
-      .big-heart-svg { width: 55px; height: 55px;}
-      .big-heart-btn { margin-top: 1.5rem;}
-      .click-effect { width: 28px; height: 28px; }
+
+    .cuadro-mensaje .cerrar:hover {
+      color: #ccc;
+      transform: rotate(90deg);
     }
   </style>
 </head>
 <body>
-  <canvas id="particles-bg"></canvas>
-  <canvas id="flying-hearts-canvas"></canvas>
-  <div class="container">
-    <h1>Valentina</h1>
-    <button class="info-btn" id="infoBtn">Para ti</button>
-    <button class="big-heart-btn" id="bigHeartBtn" aria-label="Corazón">
-      <svg class="big-heart-svg" viewBox="0 0 60 60" fill="none">
-        <path d="M30 54S5 37 5 21c0-7.5 6-13 13-13 5.2 0 10 3.5 12 8 2-4.5 6.8-8 12-8 7 0 13 5.5 13 13C55 37 30 54 30 54Z"
-          fill="#db2777" stroke="#f9a8d4" stroke-width="3"/>
-      </svg>
-    </button>
+
+  <canvas id="flying-stars-canvas"></canvas>
+  <canvas id="dry-petals-canvas"></canvas>
+
+  <div class="contenido-central">
+    <h1>¿Que paso con nosotros?</h1>
+    <div class="carta" id="bigHeartBtn">Mensaje.</div>
   </div>
-  <div class="modal-bg" id="modalBg">
-    <div class="modal-content">
-      <button class="close-btn" id="closeBtn" title="Cerrar">&times;</button>
-      <div class="confession-text" id="confessionText"></div>
-      <div class="nav-btns">
-        <button id="prevBtn" class="nav-btn" title="Atrás" aria-label="Atrás">⬅</button>
-        <button id="nextBtn" class="nav-btn" title="Adelante" aria-label="Adelante">➡</button>
-      </div>
-      <div class="nav-indicator" id="navIndicator"></div>
-    </div>
+
+  <div class="cuadro-mensaje" id="cuadroMensaje">
+    <button class="cerrar" onclick="cerrarMensaje()">×</button>
+    <p>Valentina.</p>
+    <br>
+    <p>Toda nuestra amistad quedo en la nada, sabias que me gustabas, pero me empezaste a ocultar cosas cuando yo te dije que a mi no me gustaba, te entiendo perfectamente pero ya no puedo mas, me siento triste por haber quedado en la nada, los detalles, los momentos que pase contigo eran para alegrarte y para hacerte saber lo cuanto que te apreciaba, pero sin nada mas que decirte me siento decepcionado del tipo de persona que eres, te vi diferente, te ame pero no te vi capaz de que me hicieras daño, ocultando no se llega a nada por que de una u otra manera me iba a dar cuenta, yo que daba mi 100% por ti y esto lo que recibo, burla</p>
   </div>
+
   <script>
-    // ==================== MODAL, INFO Y PARTICLES DE FONDO ===========================
-    const confessionParts = [
-      `Valentina:<br><br>
-      A veces me pongo a pensar en todo lo que hemos vivido… tres años compartiendo miradas, risas, silencios y momentos que se quedaron grabados. Aquellos días en los que tu abrazo era mi refugio, cuando todo tenía sentido solo con mirarte. Nunca imaginé cuánto valor tenían hasta que todo se detuvo.`,
-      `Hubo un tiempo en que nuestros caminos se separaron. No voy a mentirte: dolió. Sentí el vacío de no tenerte cerca, de no escuchar tu voz como antes, de no sentir tu presencia en los detalles pequeños. Pero incluso en la distancia, mi corazón seguía guardando un lugar para ti.`,
-      `Y hoy, después de todo, volvemos a estar aquí. No como los mismos de antes, sino como dos personas que han crecido, aprendido y que se han vuelto a elegir. Porque eso es lo más valioso.`,
-      `No prometo que siempre será fácil, pero sí te prometo que no soltaré tu mano. Que lucharé por ti, cada día. Porque si algo aprendí en este tiempo, es que mi lugar está contigo.`,
-      `Eres y siempre serás mi lugar favorito, ese que el tiempo no pudo borrar. Gracias por estar conmigo cuándo más lo necesite.`
-    ];
-    let confessionIndex = 0;
-    const confessionText = document.getElementById('confessionText');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const navIndicator = document.getElementById('navIndicator');
-    function renderConfession() {
-      confessionText.innerHTML = confessionParts[confessionIndex];
-      prevBtn.disabled = confessionIndex === 0;
-      nextBtn.disabled = confessionIndex === confessionParts.length - 1;
+    function randomBetween(a, b) {
+      return a + Math.random() * (b - a);
     }
-    prevBtn.onclick = () => {
-      if(confessionIndex > 0) {
-        confessionIndex--;
-        renderConfession();
-      }
-    };
-    nextBtn.onclick = () => {
-      if(confessionIndex < confessionParts.length - 1) {
-        confessionIndex++;
-        renderConfession();
-      }
-    };
-    const infoBtn = document.getElementById('infoBtn');
-    const modalBg = document.getElementById('modalBg');
-    const closeBtn = document.getElementById('closeBtn');
-    infoBtn.onclick = () => {
-      modalBg.classList.add('active');
-      confessionIndex = 0;
-      renderConfession();
-    };
-    closeBtn.onclick = () => modalBg.classList.remove('active');
-    modalBg.onclick = (e) => { if (e.target === modalBg) modalBg.classList.remove('active'); };
-    document.addEventListener('keydown', (e) => {
-      if (!modalBg.classList.contains('active')) return;
-      if (e.key === 'ArrowLeft') prevBtn.click();
-      if (e.key === 'ArrowRight') nextBtn.click();
-      if (e.key === 'Escape') closeBtn.click();
-    });
-    // Fondo corazones normales (MENOS corazones: solo 8)
-    const canvas = document.getElementById('particles-bg');
-    const ctx = canvas.getContext('2d');
-    let W = window.innerWidth, H = window.innerHeight;
-    function resizeCanvas() {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W;
-      canvas.height = H;
+
+    const starsCanvas = document.getElementById('flying-stars-canvas');
+    const starsCtx = starsCanvas.getContext('2d');
+    let starsW = window.innerWidth, starsH = window.innerHeight;
+
+    function resizeStarsCanvas() {
+      starsW = window.innerWidth;
+      starsH = window.innerHeight;
+      starsCanvas.width = starsW;
+      starsCanvas.height = starsH;
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    function randomBetween(a,b) {
-      return a + Math.random()*(b-a);
-    }
-    const hearts = [];
-    const colors = ['#db2777','#f472b6','#f9a8d4','#fff','#fb7185'];
-    // MENOS corazones (antes 28), ahora 8:
-    for(let i=0;i<8;i++){
-      hearts.push({
-        x: randomBetween(0, W),
-        y: randomBetween(0, H),
-        size: randomBetween(16,32),
-        color: colors[Math.floor(Math.random()*colors.length)],
-        speed: randomBetween(0.4,1.3),
-        dx: randomBetween(-0.3,0.3),
-        phase: Math.random()*Math.PI*2
+    window.addEventListener('resize', resizeStarsCanvas);
+    resizeStarsCanvas();
+
+    const stars = [];
+    const starColors = ['rgba(255, 255, 255, 0.6)', 'rgba(180, 180, 180, 0.5)', 'rgba(100, 100, 100, 0.4)'];
+
+    for (let i = 0; i < 40; i++) {
+      stars.push({
+        x: randomBetween(0, starsW),
+        y: randomBetween(0, starsH),
+        radius: randomBetween(0.8, 2.5),
+        color: starColors[Math.floor(Math.random() * starColors.length)],
+        speed: randomBetween(0.1, 0.4),
+        alpha: randomBetween(0.3, 0.8),
+        phase: Math.random() * Math.PI * 2
       });
     }
-    function drawHeart(x, y, s, color, phase) {
+
+    function drawStar(ctx, x, y, radius, color, alpha, phase) {
       ctx.save();
-      ctx.translate(x, y+Math.sin(performance.now()/700 + phase)*4);
-      ctx.rotate(Math.sin(performance.now()/500 + phase)*0.04);
-      ctx.scale(s/25, s/25);
       ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(0, -8, -12, -12, -12, 0);
-      ctx.bezierCurveTo(-12, 10, 0, 14, 0, 22);
-      ctx.bezierCurveTo(0, 14, 12, 10, 12, 0);
-      ctx.bezierCurveTo(12, -12, 0, -8, 0, 0);
-      ctx.closePath();
+      ctx.arc(x, y + Math.sin(performance.now() / 1000 + phase) * 2, radius, 0, Math.PI * 2);
       ctx.fillStyle = color;
-      ctx.globalAlpha = 0.65;
+      ctx.globalAlpha = alpha + Math.sin(performance.now() / 500 + phase) * 0.1;
       ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = radius * 2;
       ctx.fill();
-      ctx.globalAlpha = 1;
       ctx.restore();
     }
-    function animate() {
-      ctx.clearRect(0,0,W,H);
-      for(let h of hearts) {
-        drawHeart(h.x, h.y, h.size, h.color, h.phase);
-        h.y -= h.speed;
-        h.x += h.dx;
-        if(h.y < -30 || h.x < -30 || h.x > W+30){
-          h.x = randomBetween(0,W);
-          h.y = H+randomBetween(10,80);
-          h.size = randomBetween(16,32);
-          h.color = colors[Math.floor(Math.random()*colors.length)];
-          h.speed = randomBetween(0.4,1.3);
-          h.dx = randomBetween(-0.3,0.3);
-          h.phase = Math.random()*Math.PI*2;
+
+    function animateStars() {
+      starsCtx.clearRect(0, 0, starsW, starsH);
+      for (let s of stars) {
+        drawStar(starsCtx, s.x, s.y, s.radius, s.color, s.alpha, s.phase);
+        s.y -= s.speed;
+        if (s.y < -s.radius) {
+          s.y = starsH + s.radius;
+          s.x = randomBetween(0, starsW);
         }
       }
-      requestAnimationFrame(animate);
+      requestAnimationFrame(animateStars);
     }
-    animate();
-    
-    document.addEventListener('click', function (e) {
-      const effect = document.createElement('img');
-      effect.src = '/images/icon-web.png';
-      effect.className = 'click-effect';
-      effect.style.left = e.clientX + 'px';
-      effect.style.top = e.clientY + 'px';
-      effect.style.filter = 'invert(1) drop-shadow(0 0 8px #fff) brightness(1.6)';
-      document.body.appendChild(effect);
+
+    animateStars();
+
+    const petalsCanvas = document.getElementById('dry-petals-canvas');
+    const petalsCtx = petalsCanvas.getContext('2d');
+    let petalsW = window.innerWidth, petalsH = window.innerHeight;
+
+    function resizePetalsCanvas() {
+      petalsW = window.innerWidth;
+      petalsH = window.innerHeight;
+      petalsCanvas.width = petalsW;
+      petalsCanvas.height = petalsH;
+    }
+    window.addEventListener('resize', resizePetalsCanvas);
+    resizePetalsCanvas();
+
+    const petals = [];
+    for (let i = 0; i < 30; i++) {
+      petals.push({
+        x: randomBetween(0, petalsW),
+        y: randomBetween(0, petalsH),
+        w: randomBetween(8, 20),
+        h: randomBetween(4, 10),
+        angle: randomBetween(0, Math.PI * 2),
+        speedY: randomBetween(0.3, 0.8),
+        speedX: randomBetween(-0.3, 0.3),
+        rotationSpeed: randomBetween(-0.02, 0.02),
+        opacity: randomBetween(0.3, 0.7)
+      });
+    }
+
+    function drawPetal(p) {
+      petalsCtx.save();
+      petalsCtx.translate(p.x, p.y);
+      petalsCtx.rotate(p.angle);
+      petalsCtx.globalAlpha = p.opacity;
+      petalsCtx.fillStyle = '#555';
+      petalsCtx.beginPath();
+      petalsCtx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI);
+      petalsCtx.fill();
+      petalsCtx.restore();
+    }
+
+    function animatePetals() {
+      petalsCtx.clearRect(0, 0, petalsW, petalsH);
+      for (let p of petals) {
+        drawPetal(p);
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.angle += p.rotationSpeed;
+        if (p.y > petalsH + 20) {
+          p.y = -20;
+          p.x = randomBetween(0, petalsW);
+        }
+      }
+      requestAnimationFrame(animatePetals);
+    }
+
+    animatePetals();
+
+    const carta = document.getElementById('bigHeartBtn');
+    const cuadro = document.getElementById('cuadroMensaje');
+
+    carta.addEventListener('click', () => {
+      cuadro.style.display = 'block';
       setTimeout(() => {
-        effect.remove();
-      }, 500);
+        cuadro.classList.add('mostrar');
+      }, 10);
     });
+
+    function cerrarMensaje() {
+      cuadro.classList.remove('mostrar');
+      setTimeout(() => {
+        cuadro.style.display = 'none';
+      }, 400);
+    }
   </script>
-  <script src="/js/drawEffect.js"></script>
+
 </body>
 </html>
