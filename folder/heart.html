@@ -1,10 +1,12 @@
+<!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Valentina</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Fonts cursiva -->
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Fuente Montserrat desde Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -18,7 +20,7 @@
       background: linear-gradient(45deg, #111 0%, #444 50%, #000 100%);
       background-size: 400% 400%;
       animation: gradientAnimation 15s ease infinite;
-      font-family: 'Dancing Script', cursive;
+      font-family: 'Montserrat', Arial, sans-serif;
       overflow: hidden;
       position: relative;
       color: white;
@@ -30,41 +32,253 @@
       100% { background-position: 0% 50%; }
     }
 
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .contenido-central {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
     .contenido-central h1 {
-      font-size: 4em;
+      font-size: 3.5em;
       margin-bottom: 20px;
-      text-shadow: 3px 3px 10px rgba(0,0,0,0.6);
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
       animation: pulseText 2s infinite alternate;
-      color: #eee;
+      color: #bbb;
+    }
+
+    @keyframes pulseText {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.03); }
     }
 
     .carta {
-      background: rgba(26, 26, 26, 0.9);
-      color: #ddd;
+      background: #1a1a1a;
+      color: #ccc;
       padding: 20px 40px;
-      border-radius: 15px;
+      border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-      border: 2px solid #666;
-      font-size: 1.3em;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      border: 2px solid #555;
+      font-size: 1.1em;
     }
 
     .carta:hover {
-      transform: scale(1.1);
-      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.7);
-      border-color: #aaa;
+      transform: scale(1.08);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+      border-color: #888;
     }
 
     .cuadro-mensaje {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
       background: #111;
-      color: #ddd;
-      font-size: 24px;
-      padding: 50px;
-      border-radius: 20px;
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.8);
+      color: #ccc;
+      font-size: 22px;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+      display: none;
+      z-index: 999;
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
       text-align: center;
-      font-family: 'Dancing Script', cursive;
+      opacity: 0;
+      transition: all 0.4s ease-out;
+    }
+
+    .cuadro-mensaje.mostrar {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .cuadro-mensaje .cerrar {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .cuadro-mensaje .cerrar:hover {
+      color: #ccc;
+      transform: rotate(90deg);
     }
   </style>
 </head>
+<body>
+
+  <canvas id="flying-stars-canvas"></canvas>
+  <canvas id="dry-petals-canvas"></canvas>
+
+  <div class="contenido-central">
+    <h1>¿Que paso con nosotros?</h1>
+    <div class="carta" id="bigHeartBtn">Mensaje.</div>
+  </div>
+
+  <div class="cuadro-mensaje" id="cuadroMensaje">
+    <button class="cerrar" onclick="cerrarMensaje()">×</button>
+    <p>Valentina.</p>
+    <br>
+    <p>Toda nuestra amistad quedo en la nada, sabias que me gustabas, pero me empezaste a ocultar cosas cuando yo te dije que a mi no me gustaba, te entiendo perfectamente pero ya no puedo mas, me siento triste por haber quedado en la nada, los detalles, los momentos que pase contigo eran para alegrarte y para hacerte saber lo cuanto que te apreciaba, pero sin nada mas que decirte me siento decepcionado del tipo de persona que eres, te vi diferente, te ame pero no te vi capaz de que me hicieras daño, ocultando no se llega a nada por que de una u otra manera me iba a dar cuenta, yo que daba mi 100% por ti y esto lo que recibo, burla</p>
+  </div>
+
+  <script>
+    function randomBetween(a, b) {
+      return a + Math.random() * (b - a);
+    }
+
+    const starsCanvas = document.getElementById('flying-stars-canvas');
+    const starsCtx = starsCanvas.getContext('2d');
+    let starsW = window.innerWidth, starsH = window.innerHeight;
+
+    function resizeStarsCanvas() {
+      starsW = window.innerWidth;
+      starsH = window.innerHeight;
+      starsCanvas.width = starsW;
+      starsCanvas.height = starsH;
+    }
+    window.addEventListener('resize', resizeStarsCanvas);
+    resizeStarsCanvas();
+
+    const stars = [];
+    const starColors = ['rgba(255, 255, 255, 0.6)', 'rgba(180, 180, 180, 0.5)', 'rgba(100, 100, 100, 0.4)'];
+
+    for (let i = 0; i < 40; i++) {
+      stars.push({
+        x: randomBetween(0, starsW),
+        y: randomBetween(0, starsH),
+        radius: randomBetween(0.8, 2.5),
+        color: starColors[Math.floor(Math.random() * starColors.length)],
+        speed: randomBetween(0.1, 0.4),
+        alpha: randomBetween(0.3, 0.8),
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    function drawStar(ctx, x, y, radius, color, alpha, phase) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y + Math.sin(performance.now() / 1000 + phase) * 2, radius, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = alpha + Math.sin(performance.now() / 500 + phase) * 0.1;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = radius * 2;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animateStars() {
+      starsCtx.clearRect(0, 0, starsW, starsH);
+      for (let s of stars) {
+        drawStar(starsCtx, s.x, s.y, s.radius, s.color, s.alpha, s.phase);
+        s.y -= s.speed;
+        if (s.y < -s.radius) {
+          s.y = starsH + s.radius;
+          s.x = randomBetween(0, starsW);
+        }
+      }
+      requestAnimationFrame(animateStars);
+    }
+
+    animateStars();
+
+    const petalsCanvas = document.getElementById('dry-petals-canvas');
+    const petalsCtx = petalsCanvas.getContext('2d');
+    let petalsW = window.innerWidth, petalsH = window.innerHeight;
+
+    function resizePetalsCanvas() {
+      petalsW = window.innerWidth;
+      petalsH = window.innerHeight;
+      petalsCanvas.width = petalsW;
+      petalsCanvas.height = petalsH;
+    }
+    window.addEventListener('resize', resizePetalsCanvas);
+    resizePetalsCanvas();
+
+    const petals = [];
+    for (let i = 0; i < 30; i++) {
+      petals.push({
+        x: randomBetween(0, petalsW),
+        y: randomBetween(0, petalsH),
+        w: randomBetween(8, 20),
+        h: randomBetween(4, 10),
+        angle: randomBetween(0, Math.PI * 2),
+        speedY: randomBetween(0.3, 0.8),
+        speedX: randomBetween(-0.3, 0.3),
+        rotationSpeed: randomBetween(-0.02, 0.02),
+        opacity: randomBetween(0.3, 0.7)
+      });
+    }
+
+    function drawPetal(p) {
+      petalsCtx.save();
+      petalsCtx.translate(p.x, p.y);
+      petalsCtx.rotate(p.angle);
+      petalsCtx.globalAlpha = p.opacity;
+      petalsCtx.fillStyle = '#555';
+      petalsCtx.beginPath();
+      petalsCtx.ellipse(0, 0, p.w, p.h, 0, 0, 2 * Math.PI);
+      petalsCtx.fill();
+      petalsCtx.restore();
+    }
+
+    function animatePetals() {
+      petalsCtx.clearRect(0, 0, petalsW, petalsH);
+      for (let p of petals) {
+        drawPetal(p);
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.angle += p.rotationSpeed;
+        if (p.y > petalsH + 20) {
+          p.y = -20;
+          p.x = randomBetween(0, petalsW);
+        }
+      }
+      requestAnimationFrame(animatePetals);
+    }
+
+    animatePetals();
+
+    const carta = document.getElementById('bigHeartBtn');
+    const cuadro = document.getElementById('cuadroMensaje');
+
+    carta.addEventListener('click', () => {
+      cuadro.style.display = 'block';
+      setTimeout(() => {
+        cuadro.classList.add('mostrar');
+      }, 10);
+    });
+
+    function cerrarMensaje() {
+      cuadro.classList.remove('mostrar');
+      setTimeout(() => {
+        cuadro.style.display = 'none';
+      }, 400);
+    }
+  </script>
+
+</body>
+</html>
