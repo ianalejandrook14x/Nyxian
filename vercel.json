@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {
+      "source": "/ws",
+      "destination": "/api/websocket-handler"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Connection",
+          "value": "Keep-Alive"
+        }
+      ]
+    }
+  ]
+}
